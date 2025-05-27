@@ -1,6 +1,6 @@
-package Transcaction;
+package Transaction;
 import java.util.*;
-
+import Master.*;
 
 public class ComputerCircularList {
     private static class Node {
@@ -14,8 +14,8 @@ public class ComputerCircularList {
     private int size = 0;
 
     // Tambah komputer di akhir list
-    public void add(Computer comp) {
-        Node node = new Node(comp);
+    public void add(Computer computer) {
+        Node node = new Node(computer);
         if (head == null) {
             head = node;
             head.next = head;
@@ -40,7 +40,6 @@ public class ComputerCircularList {
                 if (tmp == head && size==1) {
                     head = null;
                 } else {
-                    // cari prev
                     Node p = head;
                     while (p.next != tmp) p = p.next;
                     p.next = tmp.next;

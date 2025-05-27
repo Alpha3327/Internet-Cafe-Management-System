@@ -3,21 +3,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Customer extends User {
-    private String id;
+    private String idCustomer;
 
-    public Customer(String name, String password, String id) {
+    public Customer(String name, String password, String idCustomer) {
         super(name, password);
-        this.id = id;
+        this.idCustomer = idCustomer;
     }
 
-    public String getId() {
-        return id;
+    public String getidCustomer() {
+        return idCustomer;
     }
 
     @Override
     public void displayInfo() {
         System.out.println("Customer Name: " + getName());
-        System.out.println("Customer ID: " + id);
+        System.out.println("Customer idCustomer: " + idCustomer);
     }
 
     @Override

@@ -1,5 +1,4 @@
-package Transcaction;
-import Master.*;
+package Master;
 
 class CashPayment implements Payment {
     @Override

@@ -1,4 +1,4 @@
-package Transcaction;
+package Transaction;
 import Master.*;
 
 public class CustomerQueue {

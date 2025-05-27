@@ -1,6 +1,6 @@
 import java.util.*;
 import Master.*;
-import Transcaction.CafeManager;
+import Transaction.CafeManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -73,25 +73,56 @@ public class Main {
 
                         switch (choice2) {
                             case 1:
-                                CafeManager.displayComputerStatus(computers);
+                                manager.displayComputerStatus();
                                 break;
 
                             case 2:
-                                CafeManager.addComputer(comp);
+                                System.out.print("Masukkan Tipe Komputer: ");
+                                String type = scanner.nextLine();
+                                System.out.print("Masukkan Nomor Komputer: ");
+                                int number = scanner.nextInt();
+                                Computer computer = null;
+
+                                switch (type.toLowerCase()) {
+                                    case "regular":
+                                        computer = new RegularComputer(number);
+                                        break;
+                                
+                                    case "vip":
+                                        computer = new VipComputer(number);                                        
+                                        break;
+                                
+                                    default:
+                                        System.out.println("Tipe komputer tidak valid. Gunakan 'regular' atau 'vip'.");
+                                        break;
+                                }
+                                manager.addComputer(computer);
                                 break;
 
                             case 3:
-                                CafeManager.removeComputer(compId);
+                                System.out.print("Masukkan Nomor Komputer yang ingin dihapus: ");
+                                int deleteComputer = scanner.nextInt();
+                                manager.removeComputer(deleteComputer);
                                 break;
 
                             case 4:
-                                
+                                manager.listSessions();
                                 break;
 
                             case 5:
+                                System.out.print("Masukkan Nama Customer: ");
+                                String name = scanner.nextLine();
+                                System.out.print("Masukkan Password Customer: ");
+                                String password = scanner.nextLine();
+                                String id = String.valueOf(customers.size() + 1);
+                                customers.add(new Customer(name, password, id));
+                                System.out.println("Customer berhasil ditambahkan.");
                                 break;
 
                             case 6:
+                                System.out.print("Masukkan ID Customer yang ingin dihapus: ");
+                                String deleteCust = scanner.nextLine();
+                                manager.removeCustomer(deleteCust, customers);
                                 break;
 
                             case 7:
@@ -108,7 +139,7 @@ public class Main {
                     break;
 
                 case 2: 
-                    System.out.print("Buat akun? (y/n): ");
+                    System.out.print("Sudah Punya Akun? (y/n): ");
                     String inputRegis = scanner.nextLine();
 
                     if (inputRegis.equalsIgnoreCase("y")) {
@@ -161,11 +192,11 @@ public class Main {
                                 break;
 
                             case 2:
-
+                                manager.displayComputerStatus();
                                 break;
 
                             case 3:
-
+                                manager.listSessions();
                                 break;
 
                             case 4:
