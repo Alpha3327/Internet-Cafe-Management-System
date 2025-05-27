@@ -1,9 +1,11 @@
 import java.util.*;
 import Master.*;
+import Transcaction.CafeManager;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        CafeManager manager = new CafeManager(5);
 
         ArrayList<Admin> admins = new ArrayList<Admin>();
         admins.add(new Admin("Aaron Laurens Misael Wantania", "admin123", "00000133269"));
@@ -71,15 +73,19 @@ public class Main {
 
                         switch (choice2) {
                             case 1:
+                                CafeManager.displayComputerStatus(computers);
                                 break;
 
                             case 2:
+                                CafeManager.addComputer(comp);
                                 break;
 
                             case 3:
+                                CafeManager.removeComputer(compId);
                                 break;
 
                             case 4:
+                                
                                 break;
 
                             case 5:

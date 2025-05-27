@@ -6,16 +6,14 @@ public class CafeManager {
     private ComputerCircularList computers;
     private CustomerQueue waitingQueue;
     private List<Session> sessions;
-    private double ratePerHour;
 
-    public CafeManager(List<Computer> initialComputers, double ratePerHour) {
+    public CafeManager(List<Computer> initialComputers) {
         computers = new ComputerCircularList();
         for (Computer c : initialComputers) {
             computers.add(c);
         }
         waitingQueue = new CustomerQueue();
         sessions = new ArrayList<>();
-        this.ratePerHour = ratePerHour;
     }
 
     public void displayComputerStatus() {

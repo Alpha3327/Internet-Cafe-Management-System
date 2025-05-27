@@ -1,5 +1,4 @@
 package Master;
-import java.util.*;
 
 public abstract class User {
     private String name;
