@@ -33,6 +33,7 @@ public class Main {
             boolean exit1 = false;
 
             switch (choice1) {
+            // MASUK SEBAGAI ADMIN
                 case 1: 
                     Admin loggedInAdmin = null;
                     while (loggedInAdmin == null) {
@@ -56,7 +57,6 @@ public class Main {
                     }
 
                     System.out.printf("\nMasuk sebagai %s\n", loggedInAdmin.getName());
-
                     while (!exit1) {
                         System.out.println("\nMenu Admin:");
                         System.out.println("1. Tampilkan Status Komputer");
@@ -72,10 +72,12 @@ public class Main {
                         scanner.nextLine();
 
                         switch (choice2) {
+                            // 1. Tampilkan Status Komputer
                             case 1:
                                 manager.displayComputerStatus();
                                 break;
 
+                            // 2. Tambah Komputer
                             case 2:
                                 System.out.print("Masukkan Tipe Komputer: ");
                                 String type = scanner.nextLine();
@@ -99,17 +101,20 @@ public class Main {
                                 manager.addComputer(computer);
                                 break;
 
+                            // 3. Hapus Komputer
                             case 3:
                                 System.out.print("Masukkan Nomor Komputer yang ingin dihapus: ");
                                 int deleteComputer = scanner.nextInt();
                                 manager.removeComputer(deleteComputer);
                                 break;
-
+                            
+                            // 4. Lihat Riwayat Sewa
                             case 4:
                                 manager.listSessions();
                                 break;
-
-                            case 5:
+                            
+                            // 5. Tambah Customer
+                            case 5: 
                                 System.out.print("Masukkan Nama Customer: ");
                                 String name = scanner.nextLine();
                                 System.out.print("Masukkan Password Customer: ");
@@ -119,14 +124,19 @@ public class Main {
                                 System.out.println("Customer berhasil ditambahkan.");
                                 break;
 
+                            // 6. Hapus Customer
                             case 6:
                                 System.out.print("Masukkan ID Customer yang ingin dihapus: ");
                                 String deleteCust = scanner.nextLine();
-                                manager.removeCustomer(deleteCust, customers);
+                                manager.removeCustomer(deleteCust);
                                 break;
 
+                            // 7. Lihat Daftar Customer
                             case 7:
+                                System.out.println("Daftar Customer:");
+                                manager.listCustomers();
                                 break;
+
 
                             case 0:
                                 exit1 = true;
@@ -134,6 +144,7 @@ public class Main {
 
                             default:
                                 System.out.println("Pilihan tidak valid.");
+                                break;
                         }
                     }
                     break;
@@ -187,22 +198,28 @@ public class Main {
                         scanner.nextLine();
 
                         switch (choice2) {
+                            // 1. Sewa Komputer
                             case 1:
+                                
 
+                                manager.startSession(loggedInCustomer, );
                                 break;
 
+                            // 2. Tampilkan Status Komputer
                             case 2:
                                 manager.displayComputerStatus();
                                 break;
 
+                            // 3. Lihat Riwayat Sewa
                             case 3:
                                 manager.listSessions();
                                 break;
 
+                            // 4. Ganti Password
                             case 4:
 
                                 break;
-
+                            
                             case 0:
                                 exit1 = false;
                                 break;

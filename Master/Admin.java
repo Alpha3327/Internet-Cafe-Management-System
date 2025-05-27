@@ -1,6 +1,5 @@
 package Master;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Admin extends User {
     private String adminId;

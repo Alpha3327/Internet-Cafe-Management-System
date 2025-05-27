@@ -10,7 +10,7 @@ public class Customer extends User {
         this.idCustomer = idCustomer;
     }
 
-    public String getidCustomer() {
+    public String getIdCustomer() {
         return idCustomer;
     }
 

@@ -4,9 +4,9 @@ import Master.*;
 
 public class CafeManager {
     private ComputerCircularList computers;
+    private List<Customer> customers;
     private CustomerQueue waitingQueue;
     private List<Session> sessions;
-    private double ratePerHour;
 
     public CafeManager(int numComputers) {
         computers = new ComputerCircularList();
@@ -42,7 +42,6 @@ public class CafeManager {
         }
     }
 
-    
     public void listSessions() {
         if (sessions.isEmpty()) {
             System.out.println("No sessions recorded.");
@@ -50,6 +49,35 @@ public class CafeManager {
             System.out.println("=== Session History ===");
             for (Session s : sessions) {
                 s.printSessionInfo();
+            }
+        }
+    }
+
+    public void removeCustomer(String idCustomer) {
+        // Cari customer berdasarkan ID
+        Customer toRemove = null;
+        for (Customer c : customers) {
+            if (idCustomer.equals(c.getIdCustomer())) {
+                toRemove = c;
+                break;
+            }
+        }
+        // Jika ditemukan, hapus dan tampilkan pesan
+        if (toRemove != null) {
+            customers.remove(toRemove);
+            System.out.println("Customer " + toRemove.getName() + " (ID: " + idCustomer + ") telah dihapus dari sistem.");
+        } else {
+            System.out.println("Customer dengan ID " + idCustomer + " tidak ditemukan di sistem.");
+        }
+    }
+    
+    public void listCustomers() {
+        if (customers.isEmpty()) {
+            System.out.println("Tidak ada customer terdaftar.");
+        } else {
+            System.out.println("=== Daftar Customer Terdaftar ===");
+            for (Customer c : customers) {
+                System.out.println("- " + c.getName() + " (ID: " + c.getIdCustomer() + ")");
             }
         }
     }
@@ -68,9 +96,6 @@ public class CafeManager {
         return session;
     }
 
-    /**
-     * Akhiri sesi, release komputer, catat riwayat, lalu assign ke customer berikutnya.
-     */
     public void endSession(Session session) {
         session.endSession();           // me-release komputer & print info
         sessions.add(session);          // simpan riwayat
@@ -84,9 +109,6 @@ public class CafeManager {
         }
     }
 
-    /**
-     * Dapatkan jumlah customer yang sedang menunggu.
-     */
     public int queueSize() {
         return waitingQueue.size();
     }
