@@ -18,6 +18,10 @@ public class Customer extends User {
         return online;
     }
 
+    public void setOnline(boolean online) {
+    this.online = online;
+    }
+
     @Override
     public void displayInfo() {
         System.out.println("Customer Name: " + getName());

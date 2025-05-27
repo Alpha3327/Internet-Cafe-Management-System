@@ -7,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         CafeManager manager = new CafeManager(5,2);
 
-        ArrayList<Admin> admins = new ArrayList<Admin>();
+        ArrayList<Admin> admins = new ArrayList<>();
         admins.add(new Admin("Aaron Laurens Misael Wantania", "admin123", "00000133269"));
         admins.add(new Admin("Rafly Ahmad Julyana", "admin123", "00000127818"));
         admins.add(new Admin("Wilsen Gomes", "admin123", "00000127804"));
@@ -16,11 +16,10 @@ public class Main {
         admins.add(new Admin("Haris Alfarisi", "admin123", "00000128655"));
         admins.add(new Admin("admin", "a", "a"));
 
-        ArrayList<Customer> customers = new ArrayList<Customer>();
+        ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "a", "a"));
-
-        boolean exit = false;
-        while (!exit) {
+        
+        while (true) {
             System.out.println("\nMasuk sebagai:");
             System.out.println("1. Admin");
             System.out.println("2. Customer");
@@ -43,8 +42,7 @@ public class Main {
                         String inputPassword = scanner.nextLine();
 
                         for (Admin admin : admins) {
-                            if (admin.getAdminId().equalsIgnoreCase(inputId)
-                                    && admin.getPassword().equals(inputPassword)) {
+                            if (admin.getAdminId().equalsIgnoreCase(inputId) && admin.getPassword().equals(inputPassword)) {
                                 loggedInAdmin = admin;
                                 break;
                             }
@@ -99,11 +97,9 @@ public class Main {
                                             System.out.println("Tipe komputer tidak valid. Gunakan 'regular' atau 'vip'.");
                                             break;
                                     }
-                                } while (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular")));
+                                } while (computer == null);
                                 
-                                if (computer != null) {
-                                    manager.addComputer(computer);
-                                }
+                                manager.addComputer(computer);
                                 break;
 
                             // 3. Hapus Komputer
@@ -122,13 +118,13 @@ public class Main {
                             case 5:
                                 System.out.print("Masukkan ID Customer yang ingin dihapus: ");
                                 String deleteCust = scanner.nextLine();
-                                manager.removeCustomer(deleteCust);
+                                manager.removeCustomer(deleteCust, customers);
                                 break;
 
                             // 6. Lihat Daftar Customer
                             case 6:
                                 System.out.println("Daftar Customer:");
-                                manager.listCustomers();
+                                manager.listCustomers(customers);
                                 break;
 
                             // Keluar
@@ -185,7 +181,7 @@ public class Main {
 
                     while (!exit1) {
                         System.out.println("\nMenu Customer:");
-                        if (loggedInCustomer.getOnline()) {
+                        if (!loggedInCustomer.getOnline()) {
                             System.out.println("1. Sewa Komputer");
                         } else {
                             System.out.println("1. Akhiri Sesi");
@@ -199,42 +195,46 @@ public class Main {
                         scanner.nextLine();
 
                         switch (choice2) {
-                            // 1. Sewa Komputer
                             case 1:
-                                if (loggedInCustomer.getOnline()) {     // customer sedang menggunakan komputer
+                                if (!loggedInCustomer.getOnline()) {
+                                    String type;
+                                    do {
+                                        System.out.print("Pilih tipe komputer (regular/vip): ");
+                                        type = scanner.nextLine();
+                                    } while (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular")));
 
-                                    
+                                    System.out.print("Masukkan durasi (jam): ");
+                                    int duration = scanner.nextInt();
+                                    scanner.nextLine();
 
-                                } else {    // Customer sedang tidak menggunakan komputer
-
-
-                                    
+                                    manager.startSession(loggedInCustomer, type, duration);
+                                } else {
+                                    manager.endSession(loggedInCustomer);
                                 }
-                                
-
-                                // manager.startSession(loggedInCustomer, dur);
                                 break;
 
-                            // 2. Tampilkan Status Komputer
                             case 2:
                                 manager.displayComputerStatus();
                                 break;
 
-                            // 3. Lihat Riwayat Sewa
                             case 3:
                                 manager.listSessions();
                                 break;
 
-                            // 4. Ganti Password
                             case 4:
+                                System.out.print("Masukkan Password Baru: ");
+                                String newPass = scanner.nextLine();
+                                loggedInCustomer.setPassword(newPass);
+                                System.out.println("Password berhasil diubah.");
+                                break;
 
-                                break;
-                            
                             case 0:
-                                exit1 = false;
+                                exit1 = true;
                                 break;
+
                             default:
                                 System.out.println("Pilihan tidak valid.");
+                                break;
                         }
                     }
                     break;
@@ -243,10 +243,10 @@ public class Main {
                     System.out.println("Keluar dari program...");
                     scanner.close();
                     return;
+
                 default:
                     System.out.println("Input tidak valid.\n");
             }
         }
-    scanner.close();
     }
 }
