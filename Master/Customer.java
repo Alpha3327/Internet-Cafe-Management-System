@@ -1,9 +1,9 @@
 package Master;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Customer extends User {
     private String idCustomer;
+    private boolean online;
 
     public Customer(String name, String password, String idCustomer) {
         super(name, password);
@@ -12,6 +12,10 @@ public class Customer extends User {
 
     public String getIdCustomer() {
         return idCustomer;
+    }
+
+    public boolean getOnline() {
+        return online;
     }
 
     @Override

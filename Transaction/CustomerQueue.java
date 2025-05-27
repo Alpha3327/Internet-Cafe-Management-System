@@ -20,13 +20,16 @@ public class CustomerQueue {
     }
 
     public Customer dequeue() {
-        if (head == null) return null;
-        Customer c = head.data;
+        if (isEmpty()) {
+            System.out.println("Queue kosong");
+        }
+
+        Customer data = head.data;
         head = head.next;
         if (head == null) tail = null;
         size--;
-        System.out.println("Customer " + c.getName() + " di-dequeue.");
-        return c;
+        System.out.println("Customer " + data.getName() + " di-dequeue.");
+        return data;
     }
 
     public boolean isEmpty() {

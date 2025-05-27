@@ -1,6 +1,6 @@
 package Transaction;
-import java.util.*;
 import Master.*;
+import java.util.*;
 
 public class CafeManager {
     private ComputerCircularList computers;
@@ -8,31 +8,34 @@ public class CafeManager {
     private CustomerQueue waitingQueue;
     private List<Session> sessions;
 
-    public CafeManager(int numComputers) {
-        computers = new ComputerCircularList();
-        for (int i = 1; i <= numComputers; i++) {
-            computers.add(new RegularComputer(i));
-        }
+    public CafeManager(int numRegComputers, int numVipComputers) {
+        customers    = new ArrayList<>();
+        sessions     = new ArrayList<>();
         waitingQueue = new CustomerQueue();
-        sessions = new ArrayList<>();
+        computers    = new ComputerCircularList();
+        int numComputers = 0;
+        for (int i = 1; i <= numRegComputers; i++) {
+            computers.add(new RegularComputer(i));
+            numComputers++;
+        }
+        for (int i = numComputers + 1; i <= numComputers + numVipComputers; i++) {
+            computers.add(new VipComputer(i));
+        }
     }
 
-    public void addComputer(Computer comp) {
-        computers.add(comp);
-        System.out.println(comp.getType() + " #" + comp.getNumber() + " added.");
+    public void addComputer(Computer computer) {
+        computers.add(computer);
+        System.out.println(computer.getType() + " #" + computer.getNumber() + " added.");
     }
 
     public void displayComputerStatus() {
         System.out.println("=== Computer Status ===");
         for (Computer c : computers.toList()) {
-            String status = c.isAvailable()
-                ? "Available"
-                : "Occupied by " + c.getCurrentUser().getName();
-            System.out.printf("%s #%d: %s%n",
-                c.getType(), c.getNumber(), status);
+            String status = c.isAvailable() ? "Available" : "Occupied by " + c.getCurrentUser().getName();
+            System.out.printf("%s #%d: %s%n", c.getType(), c.getNumber(), status);
         }
     }
-   
+
     public void removeComputer(int compNumber) {
         boolean removed = computers.remove(compNumber);
         if (removed) {
@@ -75,7 +78,7 @@ public class CafeManager {
         if (customers.isEmpty()) {
             System.out.println("Tidak ada customer terdaftar.");
         } else {
-            System.out.println("=== Daftar Customer Terdaftar ===");
+            System.out.println("Daftar Customer");
             for (Customer c : customers) {
                 System.out.println("- " + c.getName() + " (ID: " + c.getIdCustomer() + ")");
             }
@@ -91,8 +94,7 @@ public class CafeManager {
         }
         free.occupy(customer);
         Session session = new Session(customer, computer, duration);
-        System.out.println("Session started for " + customer.getName() +
-                           " on " + free.getType() + " #" + free.getNumber());
+        System.out.println("Session started for " + customer.getName() + " on " + free.getType() + " #" + free.getNumber());
         return session;
     }
 

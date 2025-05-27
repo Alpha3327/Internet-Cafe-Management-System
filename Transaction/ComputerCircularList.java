@@ -1,6 +1,6 @@
 package Transaction;
-import java.util.*;
 import Master.*;
+import java.util.*;
 
 public class ComputerCircularList {
     private static class Node {
@@ -10,25 +10,47 @@ public class ComputerCircularList {
     }
 
     private Node head;
-    private Node current;  // pointer untuk next available
+    private Node tail;
+    private Node current;
     private int size = 0;
 
     // Tambah komputer di akhir list
     public void add(Computer computer) {
-        Node node = new Node(computer);
+        int number = computer.getNumber();
+        // 1. Cek duplikat
+        if (contains(number)) {
+            System.out.printf("Komputer dengan nomor %d sudah ada.\n", number);
+            return;  // keluar tanpa menambahkan
+        }
+
+        Node newNode = new Node(computer);
         if (head == null) {
-            head = node;
-            head.next = head;
+            // list kosong: head=tail=newNode, self-loop
+            head = tail = newNode;
+            newNode.next = newNode;
         } else {
-            Node tail = head;
-            while (tail.next != head) {
-                tail = tail.next;
+            // cari posisi sisip: sebelum first yang > num, atau di akhir
+            Node curr = head, prev = tail;
+            do {
+                if (curr.data.getNumber() > number) break;
+                prev = curr;
+                curr = curr.next;
+            } while (curr != head);
+
+            // sisip di antara prev dan curr
+            prev.next = newNode;
+            newNode.next = curr;
+
+            // update head/tail jika perlu
+            if (curr == head && number < head.data.getNumber()) {
+                head = newNode;
             }
-            tail.next = node;
-            node.next = head;
+            if (prev == tail && curr == head) {
+                tail = newNode;
+            }
         }
         size++;
-        if (current == null) current = head;
+        System.out.printf("Komputer nomor %d berhasil ditambahkan.\n", number);
     }
 
     // Hapus komputer by ID, return true kalau berhasil
@@ -82,5 +104,17 @@ public class ComputerCircularList {
         return list;
     }
 
-    public int size() { return size; }
+    private boolean contains(int number) {
+        if (head == null) return false;
+        Node current = head;
+        do {
+            if (current.data.getNumber() == number) return true;
+            current = current.next;
+        } while (current != head);
+        return false;
+    }
+
+    public int size() {
+        return size;
+    }
 }
