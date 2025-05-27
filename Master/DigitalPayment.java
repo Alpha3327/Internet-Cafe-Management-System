@@ -1,4 +1,5 @@
-class DigitalPayment implements Payment {
+package Master;
+public class DigitalPayment implements Payment {
     private String walletName;
 
     public DigitalPayment(String walletName) {

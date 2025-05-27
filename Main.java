@@ -1,9 +1,9 @@
 import java.util.*;
+import Master.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        CafeManager manager = new CafeManager(5); // 5 komputer tersedia
 
         ArrayList<Admin> admins = new ArrayList<Admin>();
         admins.add(new Admin("Aaron Laurens Misael Wantania", "admin123", "00000133269"));
@@ -12,12 +12,14 @@ public class Main {
         admins.add(new Admin("Dani Arifianto", "admin123", "00000133505"));
         admins.add(new Admin("Rachel Nayla Putri", "admin123", "00000133433"));
         admins.add(new Admin("Haris Alfarisi", "admin123", "00000128655"));
+        admins.add(new Admin("admin", "a", "1"));
 
         ArrayList<Customer> customers = new ArrayList<Customer>();
-        customers.add(new Customer("Ap", "123", "1"));
+        customers.add(new Customer("abc", "123", "1"));
 
-        while (true) {
-            System.out.println("Masuk sebagai:");
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\nMasuk sebagai:");
             System.out.println("1. Admin");
             System.out.println("2. Customer");
             System.out.println("0. Keluar");
@@ -26,7 +28,7 @@ public class Main {
             scanner.nextLine();
             System.out.println();
 
-            boolean continue1 = true;
+            boolean exit1 = false;
 
             switch (choice1) {
                 case 1: 
@@ -53,21 +55,46 @@ public class Main {
 
                     System.out.printf("\nMasuk sebagai %s\n", loggedInAdmin.getName());
 
-                    while (continue1) {
+                    while (!exit1) {
                         System.out.println("\nMenu Admin:");
                         System.out.println("1. Tampilkan Status Komputer");
-                        System.out.println("2. Logout");
+                        System.out.println("2. Tambah Komputer");
+                        System.out.println("3. Hapus Komputer");
+                        System.out.println("4. Lihat Riwayat Sewa");
+                        System.out.println("5. Tambah Customer");
+                        System.out.println("6. Hapus Customer");
+                        System.out.println("7. Lihat Daftar Customer");
+                        System.out.println("0. Logout");
                         System.out.print("Pilih: ");
                         int choice2 = scanner.nextInt();
                         scanner.nextLine();
 
                         switch (choice2) {
                             case 1:
-                                manager.displayComputerStatus();
                                 break;
+
                             case 2:
-                                continue1 = false;
                                 break;
+
+                            case 3:
+                                break;
+
+                            case 4:
+                                break;
+
+                            case 5:
+                                break;
+
+                            case 6:
+                                break;
+
+                            case 7:
+                                break;
+
+                            case 0:
+                                exit1 = true;
+                                break;
+
                             default:
                                 System.out.println("Pilihan tidak valid.");
                         }
@@ -111,23 +138,36 @@ public class Main {
 
                     System.out.printf("\nMasuk sebagai %s\n", loggedInCustomer.getName());
 
-                    while (continue1) {
+                    while (!exit1) {
                         System.out.println("\nMenu Customer:");
                         System.out.println("1. Sewa Komputer");
                         System.out.println("2. Tampilkan Status Komputer");
-                        System.out.println("3. Logout");
+                        System.out.println("3. Lihat Riwayat Sewa");
+                        System.out.println("4. Ganti Password");
+                        System.out.println("0. Logout");
                         System.out.print("Pilih: ");
                         int choice2 = scanner.nextInt();
                         scanner.nextLine();
 
                         switch (choice2) {
                             case 1:
-                                manager.startSessionInteractive(scanner, loggedInCustomer);
-                            case 2:
-                                manager.displayComputerStatus();
+
                                 break;
+
+                            case 2:
+
+                                break;
+
                             case 3:
-                                continue1 = false;
+
+                                break;
+
+                            case 4:
+
+                                break;
+
+                            case 0:
+                                exit1 = false;
                                 break;
                             default:
                                 System.out.println("Pilihan tidak valid.");

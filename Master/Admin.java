@@ -1,7 +1,8 @@
+package Master;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-class Admin extends User implements Login {
+public class Admin extends User {
     private String adminId;
 
     public Admin(String name, String password, String adminId) {

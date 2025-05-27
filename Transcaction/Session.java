@@ -1,3 +1,6 @@
+package Transcaction;
+import Master.*;
+
 class Session {
     private Customer customer;
     private Computer computer;
@@ -7,7 +10,7 @@ class Session {
         this.customer = customer;
         this.computer = computer;
         this.duration = duration;
-        computer.occupy();
+        computer.occupy(customer);
     }
 
     public void endSession() {

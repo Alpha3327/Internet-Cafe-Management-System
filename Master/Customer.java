@@ -1,7 +1,8 @@
+package Master;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Customer extends User implements Login {
+public class Customer extends User {
     private String id;
 
     public Customer(String name, String password, String id) {
