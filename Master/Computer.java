@@ -33,4 +33,6 @@ public abstract class Computer {
     public abstract void occupy(Customer customer);
 
     public abstract void release();
+
+    public abstract int calculatePrice(int duration);
 }

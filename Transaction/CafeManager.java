@@ -8,9 +8,7 @@ public class CafeManager {
     ArrayList<Session> sessions;
     HistoryStack history;
     private Session currentSession;
-
-
-
+    
     public CafeManager(int numRegComputers, int numVipComputers) {
         sessions = new ArrayList<>();
         waitingQueue = new CustomerQueue();

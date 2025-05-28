@@ -1,4 +1,5 @@
 package Master;
+
 public class DigitalPayment implements Payment {
     private String walletName;
 
@@ -6,8 +7,12 @@ public class DigitalPayment implements Payment {
         this.walletName = walletName;
     }
 
+    public String getWalletName() {
+        return walletName;
+    }
+
     @Override
-    public void pay(double amount) {
-        System.out.println("Membayar Menggunakan " + walletName + " Sebesar Rp. " + amount + " Berhasil!");
+    public void pay(int amount) {
+        System.out.printf("Membayar menggunakan %s sebesar Rp. %d berhasil.\n", walletName, amount);
     }
 }

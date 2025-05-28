@@ -145,14 +145,18 @@ public class Main {
                     do {
                         System.out.print("Sudah Punya Akun? (y/n): ");
                         inputRegis = scanner.nextLine();
+
                         if (inputRegis.equalsIgnoreCase("n")) {
                             System.out.print("Masukkan Nama: ");
                             String nama = scanner.nextLine();
                             System.out.print("Masukkan Password: ");
                             String password = scanner.nextLine();
                             String id = String.valueOf(customers.size() + 1);
+
                             customers.add(new Customer(nama, password, id));
-                            System.out.println("Akun berhasil dibuat. Silakan login.\n");
+                            System.out.println("Akun berhasil terbuat:");
+                            System.out.println("ID: " + id);
+                            System.out.println("Nama: " + nama);
                         }
                     } while (!(inputRegis.equalsIgnoreCase("y")||inputRegis.equalsIgnoreCase("n")));
 
@@ -209,6 +213,34 @@ public class Main {
                                     manager.startSession(loggedInCustomer, type, duration);
                                 } else {
                                     manager.endSession(loggedInCustomer);
+                                    System.out.print("Masukkan total tagihan (Rp): ");
+                                    int amount = scanner.nextInt();
+                                    scanner.nextLine();                   // buang newline
+
+                                    System.out.println("Pilih metode pembayaran:");
+                                    System.out.println("1. Cash");
+                                    System.out.println("2. E-Wallet");
+                                    System.out.print("Pilih: ");
+                                    int payChoice = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    Payment payment;
+                                    do {
+                                        switch (payChoice) {
+                                        case 1:
+                                            payment = new CashPayment();
+                                            break;
+                                        case 2:
+                                            System.out.println("Pilih e-wallet (QRIS/Gopay/OVO): ");
+                                            String wallet = scanner.nextLine();
+                                            payment = new DigitalPayment(wallet);
+                                            break;
+                                        default:
+                                            System.out.println("Input tidak valid.");
+                                            return;
+                                        }
+                                    } while (payment == null);
+                                    payment.pay(amount);
                                 }
                                 break;
 
@@ -245,6 +277,7 @@ public class Main {
 
                 default:
                     System.out.println("Input tidak valid.\n");
+                    break;
             }
         }
     }

@@ -1,4 +1,4 @@
 package Master;
 public interface Payment {
-    public void pay(double amount);
+    public void pay(int amount);
 }

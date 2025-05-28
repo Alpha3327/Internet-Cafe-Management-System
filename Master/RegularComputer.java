@@ -27,4 +27,9 @@ public class RegularComputer extends Computer {
         System.out.printf("Regular Computer #%d telah selesai digunakan.\n", getNumber());
         setCurrentUser(null);
     }
+
+    @Override
+    public int calculatePrice(int duration) {
+        return duration * RATE_PER_HOUR;
+    }
 }

@@ -27,4 +27,9 @@ public class VipComputer extends Computer {
         System.out.printf("VIP Computer #%d telah selesai digunakan.\n", getNumber());
         setCurrentUser(null);
     }
+
+    @Override
+    public int calculatePrice(int duration) {
+        return duration * RATE_PER_HOUR;
+    }
 }
