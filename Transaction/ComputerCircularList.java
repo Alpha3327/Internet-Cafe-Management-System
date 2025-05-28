@@ -17,6 +17,7 @@ public class ComputerCircularList {
     // Tambah komputer di akhir list
     public void add(Computer computer) {
         if (contains(computer.getNumber())) {
+            System.out.printf("Komputer dengan nomor %d sudah ada.\n",computer.getNumber());
             System.out.println("Computer dengan nomor " + computer.getNumber() + " sudah ada.");
             return;
         }

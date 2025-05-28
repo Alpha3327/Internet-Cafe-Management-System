@@ -154,19 +154,18 @@ public class Main {
                             customers.add(new Customer(nama, password, id));
                             System.out.println("Akun berhasil dibuat. Silakan login.\n");
                         }
-                    } while (!inputRegis.equalsIgnoreCase("y")||!inputRegis.equalsIgnoreCase("n"));
+                    } while (!(inputRegis.equalsIgnoreCase("y")||inputRegis.equalsIgnoreCase("n")));
 
                     Customer loggedInCustomer = null;
                     while (loggedInCustomer == null) {
                         System.out.println("Log in:");
-                        System.out.print("Nama: ");
-                        String inputName = scanner.nextLine();
+                        System.out.print("ID: ");
+                        String inputId = scanner.nextLine();
                         System.out.print("Password: ");
                         String inputPassword = scanner.nextLine();
 
                         for (Customer customer : customers) {
-                            if (customer.getName().equalsIgnoreCase(inputName)
-                                    && customer.getPassword().equals(inputPassword)) {
+                            if (customer.getIdCustomer().equalsIgnoreCase(inputId) && customer.getPassword().equals(inputPassword)) {
                                 loggedInCustomer = customer;
                                 break;
                             }

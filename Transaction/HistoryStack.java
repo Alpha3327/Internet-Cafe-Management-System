@@ -1,7 +1,5 @@
 package Transaction;
 
-import Master.Session;
-
 public class HistoryStack {
     private static class Node {
         Session data;

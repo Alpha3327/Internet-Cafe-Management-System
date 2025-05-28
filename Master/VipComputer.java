@@ -20,7 +20,6 @@ public class VipComputer extends Computer {
     @Override
     public void occupy(Customer user) {
         setCurrentUser(user);
-        System.out.printf("VIP Computer #%d mulai digunakan oleh %s.\n", getNumber(), user.getName());
     }
 
     @Override

@@ -20,7 +20,6 @@ public class RegularComputer extends Computer {
     @Override
     public void occupy(Customer user) {
         setCurrentUser(user);
-        System.out.printf("Regular Computer #%d mulai digunakan oleh %s.\n", getNumber(), user.getName());
     }
 
     @Override

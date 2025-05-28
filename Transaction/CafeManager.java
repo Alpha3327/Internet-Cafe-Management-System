@@ -33,27 +33,27 @@ public class CafeManager {
     }
 
     public void displayComputerStatus() {
-        System.out.println("=== Computer Status ===");
+        System.out.println("\nList Status Komputer:");
         for (Computer c : computers.toList()) {
-            String status = c.isAvailable() ? "Available" : "Occupied by " + c.getCurrentUser().getName();
+            String status = c.isAvailable() ? "Kosong" : "Digunakan oleh " + c.getCurrentUser().getName();
             System.out.printf("%s #%d: %s%n", c.getType(), c.getNumber(), status);
         }
     }
 
-    public void removeComputer(int compNumber) {
-        boolean removed = computers.remove(compNumber);
+    public void removeComputer(int computerNumber) {
+        boolean removed = computers.remove(computerNumber);
         if (removed) {
-            System.out.println("Computer #" + compNumber + " removed.");
+            System.out.printf("Komputer nomor #%d dihapus dari list.\n", computerNumber);
         } else {
-            System.out.println("Computer with number " + compNumber + " not found.");
+            System.out.printf("Komputer dengan nomor #%d tidak dapat ditemukan.\n", computerNumber);
         }
     }
 
     public void listSessions() {
         if (sessions.isEmpty()) {
-            System.out.println("No sessions recorded.");
+            System.out.println("Tidak ada histori.");
         } else {
-            System.out.println("=== Session History ===");
+            System.out.println("Histori Penggunaan");
             for (Session s : sessions) {
                 s.printSessionInfo();
             }
@@ -72,9 +72,9 @@ public class CafeManager {
         // Jika ditemukan, hapus dan tampilkan pesan
         if (toRemove != null) {
             customers.remove(toRemove);
-            System.out.println("Customer " + toRemove.getName() + " (ID: " + idCustomer + ") telah dihapus dari sistem.");
+            System.out.printf("Customer %s dengan ID: %s telah dihapus dari sistem.\n", toRemove.getName(), idCustomer);
         } else {
-            System.out.println("Customer dengan ID " + idCustomer + " tidak ditemukan di sistem.");
+            System.out.printf("Customer dengan ID %s tidak ditemukan di dalam sistem.\n", idCustomer);
         }
     }
     
@@ -107,7 +107,7 @@ public class CafeManager {
 
     System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.", customer.getName(), computer.getType(), computer.getNumber(), duration);
     return currentSession;
-}
+    }
 
     public Session startSession(Customer customer, String type, int duration) {
     if (customer.getOnline()) {
@@ -122,7 +122,7 @@ public class CafeManager {
     }
     // ada komputer → delegasi ke overload existing (Customer, Computer, int)
     return startSession(customer, free, duration);
-}
+    }
 
     public Session startSession(Customer customer, int duration) {
     Computer free = computers.getNextAvailable();
@@ -132,7 +132,7 @@ public class CafeManager {
         return null;
     }
     return startSession(customer, free, duration);
-}
+    }
 
     public void endSession(Session session) {
         session.endSession();
