@@ -1,42 +1,20 @@
 package Master;
-import java.util.*;
 
 public class Admin extends User {
-    private String adminId;
+    private final String idAdmin;
 
     public Admin(String name, String password, String adminId) {
         super(name, password);
-        this.adminId = adminId;
+        this.idAdmin = adminId;
     }
 
-    public String getAdminId() {
-        return adminId;
+    public String getIdAdmin() {
+        return idAdmin;
     }
 
     @Override
     public void displayInfo() {
-        System.out.println("Nama Admin: " + getName() + "\nID Admin: " + adminId);
-    }
-
-    @Override
-    public boolean login() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Masukkan Username Admin: ");
-        String user = input.nextLine();
-        System.out.print("Masukkan Password Admin: ");
-        String pass = input.nextLine();
-
-        input.close();
-        return getName().equalsIgnoreCase(user) && getPassword().equals(pass);
-    }
-
-    public static boolean login(String user, String password, ArrayList<Admin> admins) {
-        for (Admin admin : admins) {
-            if (admin.getName().equalsIgnoreCase(user) &&
-                admin.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
+        System.out.println("Nama: " + getName());
+        System.out.println("ID Customer: " + idAdmin);
     }
 }

@@ -3,7 +3,7 @@ import Master.*;
 import java.util.*;
 
 public class CafeManager {
-    ComputerCircularList computers;
+    ComputerList computers;
     CustomerQueue waitingQueue;
     ArrayList<Session> sessions;
     HistoryStack history;
@@ -12,7 +12,7 @@ public class CafeManager {
     public CafeManager(int numRegComputers, int numVipComputers) {
         sessions = new ArrayList<>();
         waitingQueue = new CustomerQueue();
-        computers = new ComputerCircularList();
+        computers = new ComputerList();
         history = new HistoryStack();
 
         int numComputers = 0;
@@ -96,64 +96,64 @@ public class CafeManager {
     return null;
     }
 
-    public Session startSession(Customer customer, Computer computer, int duration) {
-    customer.setOnline(true);
-    computer.occupy(customer);
-
-    currentSession = new Session(customer, computer, duration);
-    sessions.add(currentSession);
-
-    System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.", customer.getName(), computer.getType(), computer.getNumber(), duration);
-    return currentSession;
-    }
-
     public Session startSession(Customer customer, String type, int duration) {
-    if (customer.getOnline()) {
-        System.out.println(customer.getName() + " sudah punya sesi aktif.");
-        return null;
-    }
-    Computer free = findFreeByType(type);
-    if (free == null) {
-        System.out.println("Tidak ada komputer " + type + " yang tersedia. Masuk antrian.");
-        waitingQueue.enqueue(customer);
-        return null;
-    }
-    // ada komputer → delegasi ke overload existing (Customer, Computer, int)
-    return startSession(customer, free, duration);
-    }
-
-    public Session startSession(Customer customer, int duration) {
-    Computer free = computers.getNextAvailable();
-    if (free == null) {
-        System.out.println("All computers are currently occupied. Adding to queue.");
-        waitingQueue.enqueue(customer);
-        return null;
-    }
-    return startSession(customer, free, duration);
-    }
-
-    public void endSession(Session session) {
-        session.endSession();
-        sessions.add(session);
-
-        if (!waitingQueue.isEmpty()) {
-            Customer next = waitingQueue.dequeue();
-            System.out.println("Assigning next customer: " + next.getName());
-            Computer freeComputer = computers.getNextAvailable();
-            int defaultDuration = 1; // or set this to a suitable default or get from next
-            startSession(next, freeComputer, defaultDuration);
+        if (customer.getOnline()) {
+            System.out.println(customer.getName() + " sudah punya sesi aktif.");
+            return null;
         }
+        Computer free = findFreeByType(type);
+        if (free == null) {
+            System.out.println("Tidak ada komputer " + type + " yang tersedia. Masuk antrian.");
+            waitingQueue.enqueue(customer);
+            return null;
+        }
+        return startSession(customer, free, duration);
     }
 
-    public void endSession(Customer customer) {
+    public Session startSession(Customer customer, Computer computer, int duration) {
+        customer.setOnline(true);
+        computer.occupy(customer);
+
+        currentSession = new Session(customer, computer, duration);
+        sessions.add(currentSession);
+
+        System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.", customer.getName(), computer.getType(), computer.getNumber(), duration);
+        return currentSession;
+    }
+
+    // public Session startSession(Customer customer, int duration) {
+    // Computer free = computers.getNextAvailable();
+    // if (free == null) {
+    //     System.out.println("All computers are currently occupied. Adding to queue.");
+    //     waitingQueue.enqueue(customer);
+    //     return null;
+    // }
+    // return startSession(customer, free, duration);
+    // }
+
+    // public void endSession(Session session) {
+    //     session.endSession();
+    //     sessions.add(session);
+
+    //     if (!waitingQueue.isEmpty()) {
+    //         Customer next = waitingQueue.dequeue();
+    //         System.out.println("Assigning next customer: " + next.getName());
+    //         Computer freeComputer = computers.getNextAvailable();
+    //         int defaultDuration = 1; // or set this to a suitable default or get from next
+    //         startSession(next, freeComputer, defaultDuration);
+    //     }
+    // }
+
+    public Session endSession(Customer customer) {
         if (currentSession == null || !currentSession.getCustomer().equals(customer)) {
             System.out.println("Tidak ada sesi aktif untuk " + customer.getName());
-            return;
+            return null;
         }
         Session session = currentSession;
-        session.endSession();
+        session.end();
         history.push(session);
         currentSession = null;
+        return session;
     }
 
     public int queueSize() {

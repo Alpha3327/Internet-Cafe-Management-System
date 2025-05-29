@@ -1,7 +1,7 @@
 package Master;
 
 public abstract class User {
-    private String name;
+    private final String name;
     private String password;
 
     public User(String name, String password) {
@@ -9,14 +9,8 @@ public abstract class User {
         this.password = password;
     }
 
-    public abstract void displayInfo();
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPassword() {
@@ -27,5 +21,5 @@ public abstract class User {
         this.password = password;
     }
 
-    public abstract boolean login();
+    public abstract void displayInfo();
 }

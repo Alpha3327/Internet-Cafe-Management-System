@@ -2,7 +2,7 @@ package Transaction;
 import Master.*;
 import java.util.*;
 
-public class ComputerCircularList {
+public class ComputerList {
     private static class Node {
         Computer data;
         Node next;

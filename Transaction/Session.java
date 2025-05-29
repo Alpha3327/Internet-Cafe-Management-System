@@ -37,14 +37,13 @@ public class Session {
         return duration;
     }
 
-    public void endSession() {
+    public void end() {
         customer.setOnline(false);
         computer.release();
         printSessionInfo();
     }
 
     public void printSessionInfo() {
-        System.out.println(
-            customer.getName() + " menggunakan Komputer Nomor " + computer.getNumber() + " selama " + duration + " jam.");
+        System.out.printf("%s menggunakan kommputer nomor %d selama %d jam.\n", customer.getName(), computer.getNumber(), duration);
     }
 }

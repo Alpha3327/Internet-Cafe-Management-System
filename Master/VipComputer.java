@@ -24,7 +24,7 @@ public class VipComputer extends Computer {
 
     @Override
     public void release() {
-        System.out.printf("VIP Computer #%d telah selesai digunakan.\n", getNumber());
+        System.out.printf("Komputer VIP #%d telah selesai digunakan.\n", getNumber());
         setCurrentUser(null);
     }
 

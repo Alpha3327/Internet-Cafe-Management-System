@@ -24,7 +24,7 @@ public class RegularComputer extends Computer {
 
     @Override
     public void release() {
-        System.out.printf("Regular Computer #%d telah selesai digunakan.\n", getNumber());
+        System.out.printf("Komputer regular #%d telah selesai digunakan.\n", getNumber());
         setCurrentUser(null);
     }
 
