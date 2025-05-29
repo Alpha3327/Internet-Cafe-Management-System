@@ -19,43 +19,36 @@ public class Main {
         ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "1", "1"));
 
-        boolean loggedIn = false;
         User loggedInUser = null;
         System.out.println("Selamat datang di Cafe Komputer!");
         
-        while (!loggedIn) {
+        while (loggedInUser == null) {
             System.out.println("Silakan masuk untuk melanjutkan.");
-            System.out.print("Masukkan ID: ");
-            String inputId = scanner.nextLine();
+            System.out.print("Masukkan ID atau nama: ");
+            String inputIdOrPass = scanner.nextLine();
             System.out.print("Masukkan Password: ");
             String inputPassword = scanner.nextLine();
 
             for (Admin admin : admins) {
-                if (admin.getIdAdmin().equalsIgnoreCase(inputId) && admin.getPassword().equals(inputPassword)) {
-                    loggedIn = true;
-                    System.out.printf("Selamat datang, %s\n", admin.getName());
+                if ((admin.getIdAdmin().equalsIgnoreCase(inputIdOrPass) || admin.getName().equalsIgnoreCase(inputIdOrPass)) && admin.getPassword().equals(inputPassword)) {
+                    System.out.printf("\nSelamat datang, %s\n", admin.getName());
                     loggedInUser = admin;
                     break;
                 }
             }
 
             for (Customer customer : customers) {
-                if (customer.getIdCustomer().equalsIgnoreCase(inputId) && customer.getPassword().equals(inputPassword)) {
-                    loggedIn = true;
-                    System.out.printf("Selamat datang, %s\n", customer.getName());
+                if ((customer.getIdCustomer().equalsIgnoreCase(inputIdOrPass) || customer.getName().equalsIgnoreCase(inputIdOrPass)) && customer.getPassword().equals(inputPassword)) {
+                    System.out.printf("\nSelamat datang, %s\n", customer.getName());
                     loggedInUser = customer;
                     break;
                 }
             }
-
-            if (!loggedIn) {
-                System.out.println("ID atau Password salah. Coba lagi.\n");
-            }
+            System.out.println("\nID atau Password salah. Coba lagi.\n");
         }
 
         if (loggedInUser instanceof Admin loggedInAdmin) {
             boolean exit1 = false;
-            System.out.printf("\nMasuk sebagai %s\n", loggedInAdmin.getName());
             while (!exit1) {
                 System.out.println("\nMenu Admin:");
                 System.out.println("1. Tampilkan Status Komputer");
@@ -66,7 +59,7 @@ public class Main {
                 System.out.println("6. Lihat Daftar Customer");
                 System.out.println("0. Logout");
                 System.out.print("Pilih: ");
-                int choice2 = scanner.nextInt();
+                int choice2 = Integer.parseInt(scanner.nextLine());
                 scanner.nextLine();
 
                 switch (choice2) {
@@ -155,8 +148,7 @@ public class Main {
                 System.out.println("4. Ganti Password");
                 System.out.println("0. Logout");
                 System.out.print("Pilih: ");
-                int choice2 = scanner.nextInt();
-                scanner.nextLine();
+                int choice2 = Integer.parseInt(scanner.nextLine());
 
                 switch (choice2) {
                     // 1. Sewa atau akhiri sesi
@@ -168,9 +160,17 @@ public class Main {
                                 type = scanner.nextLine();
                             } while (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular")));
 
-                            System.out.print("Masukkan durasi (jam): ");
-                            int duration = scanner.nextInt();
-                            scanner.nextLine();
+                            int duration = 0;
+                            boolean validInput = false;
+                            while (!validInput) {
+                                try {
+                                    System.out.print("Masukkan durasi (jam): ");
+                                    duration = Integer.parseInt(scanner.nextLine());
+                                    validInput = true;
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Input tidak valid. Masukkan angka.");
+                                }
+                            }
 
                             manager.startSession(loggedInCustomer, type, duration);
                         } else {
