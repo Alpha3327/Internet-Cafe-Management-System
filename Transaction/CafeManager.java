@@ -25,6 +25,16 @@ public class CafeManager {
         }
     }
 
+    public static int checkInput(String input) {
+        try {
+            int number = Integer.parseInt(input);
+            return number;
+        } catch (NumberFormatException e) {
+            System.out.println("Input tidak valid. Masukkan angka.");
+            return -1;
+        }
+    }
+
     public void addComputer(Computer computer) {
         computers.add(computer);
         System.out.println(computer.getType() + " #" + computer.getNumber() + " added.");
@@ -120,29 +130,6 @@ public class CafeManager {
         System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.", customer.getName(), computer.getType(), computer.getNumber(), duration);
         return currentSession;
     }
-
-    // public Session startSession(Customer customer, int duration) {
-    // Computer free = computers.getNextAvailable();
-    // if (free == null) {
-    //     System.out.println("All computers are currently occupied. Adding to queue.");
-    //     waitingQueue.enqueue(customer);
-    //     return null;
-    // }
-    // return startSession(customer, free, duration);
-    // }
-
-    // public void endSession(Session session) {
-    //     session.endSession();
-    //     sessions.add(session);
-
-    //     if (!waitingQueue.isEmpty()) {
-    //         Customer next = waitingQueue.dequeue();
-    //         System.out.println("Assigning next customer: " + next.getName());
-    //         Computer freeComputer = computers.getNextAvailable();
-    //         int defaultDuration = 1; // or set this to a suitable default or get from next
-    //         startSession(next, freeComputer, defaultDuration);
-    //     }
-    // }
 
     public Session endSession(Customer customer) {
         if (currentSession == null || !currentSession.getCustomer().equals(customer)) {

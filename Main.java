@@ -23,7 +23,7 @@ public class Main {
         System.out.println("Selamat datang di Cafe Komputer!");
         
         while (loggedInUser == null) {
-            System.out.println("Silakan masuk untuk melanjutkan.");
+            System.out.println("\nSilakan masuk untuk melanjutkan.");
             System.out.print("Masukkan ID atau nama: ");
             String inputIdOrPass = scanner.nextLine();
             System.out.print("Masukkan Password: ");
@@ -44,7 +44,41 @@ public class Main {
                     break;
                 }
             }
-            System.out.println("\nID atau Password salah. Coba lagi.\n");
+
+            if (loggedInUser == null) {
+                System.out.println("\nID atau Password salah. Coba lagi.\n");
+                String inputRegis;
+                boolean accountLoop = true;
+                do {
+                    System.out.print("Buat akun baru? (y/n): ");
+                    inputRegis = scanner.nextLine();
+
+                    switch (inputRegis.toLowerCase()) {
+                        case "y":
+                            System.out.print("Masukkan Nama: ");
+                            String nama = scanner.nextLine();
+                            System.out.print("Masukkan Password: ");
+                            String password = scanner.nextLine();
+                            String id = String.valueOf(customers.size() + 1);
+
+                            customers.add(new Customer(nama, password, id));
+                            System.out.println("Akun berhasil terbuat:");
+                            System.out.println("ID: " + id);
+                            System.out.println("Nama: " + nama);
+                            accountLoop = false;
+                            break;
+
+                        case "n":
+                            System.out.println("Kembali ke menu login");
+                            accountLoop = false;
+                            break;
+
+                        default:
+                            System.out.println("Input invalid!");
+                            break;
+                    }
+                } while (accountLoop);
+            }
         }
 
         if (loggedInUser instanceof Admin loggedInAdmin) {
@@ -57,11 +91,16 @@ public class Main {
                 System.out.println("4. Lihat Riwayat Sewa");
                 System.out.println("5. Hapus Customer");
                 System.out.println("6. Lihat Daftar Customer");
+                System.out.println("7. Informasi Akun");
                 System.out.println("0. Logout");
                 System.out.print("Pilih: ");
-                int choice2 = Integer.parseInt(scanner.nextLine());
-                scanner.nextLine();
+                int choice2;
+                do {
+                    String tempChoice2 = scanner.nextLine();
+                    choice2 = CafeManager.checkInput(tempChoice2);
+                } while (choice2 < 0);
 
+                boolean exit2;
                 switch (choice2) {
                     // 1. Tampilkan Status Komputer
                     case 1:
@@ -76,8 +115,11 @@ public class Main {
                             System.out.print("Masukkan Tipe Komputer: ");
                             type = scanner.nextLine();
                             System.out.print("Masukkan Nomor Komputer: ");
-                            int number = scanner.nextInt();
-                            scanner.nextLine(); // consume newline
+                            int number;
+                            do {
+                                String tempNumber = scanner.nextLine();
+                                number = CafeManager.checkInput(tempNumber);
+                            } while (choice2 < 0);
 
                             switch (type.toLowerCase()) {
                                 case "regular":
@@ -106,7 +148,14 @@ public class Main {
                     
                     // 4. Lihat Riwayat Sewa
                     case 4:
-                        manager.listSessions();
+                        exit2 = false;
+                        do {
+                            manager.listSessions();
+                            System.out.println("Menu:");
+                            System.out.println("1. Hapus Sesi terakhir");
+                            System.out.println("0. Kembali");
+
+                        } while (!exit2);
                         break;
                     
                     // 5. Hapus Customer
@@ -122,6 +171,43 @@ public class Main {
                         manager.listCustomers(customers);
                         break;
 
+                    // 7. Informasi Akun
+                    case 7:
+                        exit2 = false;
+                        do {
+                            loggedInAdmin.displayInfo();
+                            System.out.println("Menu:");
+                            System.out.println("1. Ganti Nama:");
+                            System.out.println("2. Ganti Password:");
+                            System.out.println("0. Kembali:");
+                            int input = Integer.parseInt(scanner.nextLine());
+                            
+                            switch (input) {
+                                case 1:
+                                    System.out.print("Masukkan Nama Baru: ");
+                                    String newName = scanner.nextLine();
+                                    loggedInAdmin.setName(newName);
+                                    System.out.println("Nama berhasil diubah.");
+                                    break;
+
+                                case 2:
+                                    System.out.print("Masukkan Password Baru: ");
+                                    String newPass = scanner.nextLine();
+                                    loggedInAdmin.setPassword(newPass);
+                                    System.out.println("Password berhasil diubah.");
+                                    break;
+
+                                case 0:
+                                    System.out.println("Kembali ke menu sebelumnya.");
+                                    exit2 = true;
+                                    break;
+
+                                default:
+                                    System.out.println("Pilihan tidak valid.");
+                                    break;
+                            }
+                        } while (!exit2);
+                        break;
                     // Keluar
                     case 0:
                         System.out.println("Log out...");
@@ -145,7 +231,7 @@ public class Main {
                 }
                 System.out.println("2. Tampilkan Status Komputer");
                 System.out.println("3. Lihat Riwayat Sewa");
-                System.out.println("4. Ganti Password");
+                System.out.println("4. Informasi Akun");
                 System.out.println("0. Logout");
                 System.out.print("Pilih: ");
                 int choice2 = Integer.parseInt(scanner.nextLine());
@@ -182,8 +268,11 @@ public class Main {
                             System.out.println("1. Cash");
                             System.out.println("2. E-Wallet");
                             System.out.print("Pilih: ");
-                            int payChoice = scanner.nextInt();
-                            scanner.nextLine();
+                            int payChoice;
+                            do {
+                                String tempPayChoice = scanner.nextLine();
+                                payChoice = CafeManager.checkInput(tempPayChoice);
+                            } while (choice2 < 0);
 
                             Payment payment;
                             do {
@@ -192,8 +281,16 @@ public class Main {
                                     payment = new CashPayment();
                                     break;
                                 case 2:
-                                    System.out.println("Pilih e-wallet (QRIS/Gopay/OVO): ");
-                                    String wallet = scanner.nextLine();
+                                    String wallet = null;
+                                    do {
+                                        System.out.println("Pilih e-wallet (QRIS/Gopay/OVO): ");
+                                        String input = scanner.nextLine();
+                                        if (input.equalsIgnoreCase("QRIS")||input.equalsIgnoreCase("Gopay")||input.equalsIgnoreCase("OVO")) {
+                                            wallet = input.toUpperCase();
+                                        } else {
+                                            System.out.println("e-wallet tidak valid, coba lagi.");
+                                        }
+                                    } while (wallet == null);
                                     payment = new DigitalPayment(wallet);
                                     break;
                                 default:
@@ -212,15 +309,45 @@ public class Main {
 
                     // 3. Lihat riwayat sesi
                     case 3:
-                        manager.listSessions();
+                        loggedInCustomer.displayCustSessions();
                         break;
 
                     // 4. Ganti password
                     case 4:
-                        System.out.print("Masukkan Password Baru: ");
-                        String newPass = scanner.nextLine();
-                        loggedInCustomer.setPassword(newPass);
-                        System.out.println("Password berhasil diubah.");
+                        boolean exit2 = false;
+                        do {
+                            loggedInCustomer.displayInfo();
+                            System.out.println("Menu:");
+                            System.out.println("1. Ganti Nama:");
+                            System.out.println("2. Ganti Password:");
+                            System.out.println("0. Kembali:");
+                            int input = Integer.parseInt(scanner.nextLine());
+                            
+                            switch (input) {
+                                case 1:
+                                    System.out.print("Masukkan Nama Baru: ");
+                                    String newName = scanner.nextLine();
+                                    loggedInCustomer.setName(newName);
+                                    System.out.println("Nama berhasil diubah.");
+                                    break;
+
+                                case 2:
+                                    System.out.print("Masukkan Password Baru: ");
+                                    String newPass = scanner.nextLine();
+                                    loggedInCustomer.setPassword(newPass);
+                                    System.out.println("Password berhasil diubah.");
+                                    break;
+
+                                case 0:
+                                    System.out.println("Kembali ke menu sebelumnya.");
+                                    exit2 = true;
+                                    break;
+
+                                default:
+                                    System.out.println("Pilihan tidak valid.");
+                                    break;
+                            }
+                        } while (!exit2);
                         break;
 
                     case 0:

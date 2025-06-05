@@ -9,9 +9,7 @@ public class ComputerList {
         Node(Computer data) { this.data = data; }
     }
 
-    private Node head;
-    private Node tail;
-    private Node current;
+    private Node head, tail, current;
     private int size = 0;
 
     // Tambah komputer di akhir list
