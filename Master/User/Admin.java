@@ -1,4 +1,4 @@
-package Master;
+package Master.User;
 
 public class Admin extends User {
     private final String idAdmin;

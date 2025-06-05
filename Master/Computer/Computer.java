@@ -1,4 +1,7 @@
-package Master;
+package Master.Computer;
+
+import Master.User.Customer;
+
 public abstract class Computer {
     private int number;
     private Customer currentUser;

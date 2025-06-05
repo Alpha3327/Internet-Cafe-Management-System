@@ -1,4 +1,6 @@
-import Master.*;
+import Master.Computer.*;
+import Master.Payment.*;
+import Master.User.*;
 import Transaction.*;
 import java.util.*;
 
@@ -18,6 +20,7 @@ public class Main {
 
         ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "1", "1"));
+        customers.add(new Customer("Haris", "12345", "2"));
 
         boolean exit = false;
         while (!exit) {
@@ -26,10 +29,10 @@ public class Main {
             System.out.println("Klik Enter untuk lanjut.");
             System.out.println("Ketik stop untuk memberhentikan program");
             String programConf = scanner.nextLine();
+
             if (programConf.equalsIgnoreCase("stop")) {
                 System.out.println("Terima kasih sudah menggunakan program ini.");
                 exit = true;
-                scanner.close();
                 break;
             }
             
@@ -96,13 +99,11 @@ public class Main {
                 boolean exit1 = false;
                 while (!exit1) {
                     System.out.println("\nMenu Admin:");
-                    System.out.println("1. Tampilkan Status Komputer");
-                    System.out.println("2. Tambah Komputer");
-                    System.out.println("3. Hapus Komputer");
-                    System.out.println("4. Lihat Riwayat Sewa");
-                    System.out.println("5. Hapus Customer");
-                    System.out.println("6. Lihat Daftar Customer");
-                    System.out.println("7. Informasi Akun");
+                    System.out.println("1. Atur Komputer");
+                    System.out.println("2. Lihat Riwayat Sewa");
+                    System.out.println("3. Hapus Customer");
+                    System.out.println("4. Lihat Daftar Customer");
+                    System.out.println("5. Informasi Akun");
                     System.out.println("0. Logout");
                     System.out.print("Pilih: ");
                     int choice2;
@@ -115,75 +116,129 @@ public class Main {
                     switch (choice2) {
                         // 1. Tampilkan Status Komputer
                         case 1:
+                        exit2 = false;
+                        do {
                             manager.displayComputerStatus();
-                            break;
-
-                        // 2. Tambah Komputer
-                        case 2:
-                            String type;
-                            Computer computer = null;
+                            System.out.println("\nMenu:");
+                            System.out.println("1. Tambah Komputer");
+                            System.out.println("2. Hapus Komputer");
+                            System.out.println("0. Kembali");
+                            System.out.print("Pilih: ");
+                            int input;
                             do {
-                                System.out.print("Masukkan Tipe Komputer: ");
-                                type = scanner.nextLine();
-                                System.out.print("Masukkan Nomor Komputer: ");
-                                int number;
-                                do {
-                                    String tempNumber = scanner.nextLine();
-                                    number = CafeManager.checkInput(tempNumber);
-                                } while (choice2 < 0);
+                                String tempInput = scanner.nextLine();
+                                input = CafeManager.checkInput(tempInput);
+                            } while (input < 0);
 
-                                switch (type.toLowerCase()) {
-                                    case "regular":
-                                        computer = new RegularComputer(number);
-                                        break;
-                                
-                                    case "vip":
-                                        computer = new VipComputer(number);
-                                        break;
-                                
-                                    default:
-                                        System.out.println("Tipe komputer tidak valid. Gunakan 'regular' atau 'vip'.");
-                                        break;
-                                }
-                            } while (computer == null);
-                            
-                            manager.addComputer(computer);
-                            break;
+                            switch (input) {
+                                // 1. Tambah komputer
+                                case 1:
+                                    String type;
+                                    Computer computer = null;
+                                    do {
+                                        System.out.print("Masukkan Tipe Komputer (regular/vip): ");
+                                        type = scanner.nextLine();
+                                        System.out.print("Masukkan Nomor Komputer: ");
+                                        int number;
+                                        do {
+                                            String tempNumber = scanner.nextLine();
+                                            number = CafeManager.checkInput(tempNumber);
+                                        } while (number < 0);
 
-                        // 3. Hapus Komputer
-                        case 3:
-                            System.out.print("Masukkan Nomor Komputer yang ingin dihapus: ");
-                            int deleteComputer = scanner.nextInt();
-                            manager.removeComputer(deleteComputer);
+                                        switch (type.toLowerCase()) {
+                                            case "regular":
+                                                computer = new RegularComputer(number);
+                                                break;
+                                        
+                                            case "vip":
+                                                computer = new VipComputer(number);
+                                                break;
+                                        
+                                            default:
+                                                System.out.println("Tipe komputer tidak valid. Gunakan 'regular' atau 'vip'.");
+                                                break;
+                                        }
+                                    } while (computer == null);
+                                    manager.addComputer(computer);
+                                    break;
+
+                                // 2. Hapus komputer
+                                case 2:
+                                    System.out.print("Masukkan Nomor Komputer yang ingin dihapus: ");
+                                    int deleteComputer;
+                                    do {
+                                        String tempDeleteComputer = scanner.nextLine();
+                                        deleteComputer = CafeManager.checkInput(tempDeleteComputer);
+                                    } while (deleteComputer < 0);
+                                    manager.removeComputer(deleteComputer);
+                                    break;
+
+                                case 0:
+                                    System.out.println("Kembali ke menu sebelumnya.");
+                                    exit2 = true;
+                                    break;
+                                    
+                                default:
+                                    System.out.println("Pilihan tidak valid.");
+                                    break;
+                            }
+                        } while (!exit2);
                             break;
                         
-                        // 4. Lihat Riwayat Sewa
-                        case 4:
+                        // 2. Lihat Riwayat Sewa
+                        case 2:
                             exit2 = false;
                             do {
-                                manager.listSessions();
-                                System.out.println("\nMenu:");
-                                System.out.println("1. Hapus Sesi terakhir");
-                                System.out.println("0. Kembali");
+                                boolean notEmpty = manager.historyList();
+                                if (notEmpty) { // jika histori tidak kosong, maka akan menampilkan menu lagi
+                                    System.out.println("\nMenu:");
+                                    System.out.println("1. Hapus Sesi terakhir");
+                                    System.out.println("0. Kembali");
+                                    System.out.print("Pilih: ");
+                                    int input;
+                                    do {
+                                        String tempInput = scanner.nextLine();
+                                        input = CafeManager.checkInput(tempInput);
+                                    } while (input < 0 || input > 1); // Validasi input
 
+                                    switch (input) {
+                                        case 1:
+                                            manager.removeLastHistory();
+                                            break;
+                                            
+                                        case 0:
+                                            System.out.println("Kembali ke menu sebelumnya.");
+                                            exit2 = true;
+                                            break;
+                                            
+                                        default:
+                                            // Seharusnya tidak tercapai
+                                            System.out.println("Pilihan tidak valid.");
+                                            break;
+                                    }
+                                } else {
+                                    System.out.println("Tekan enter untuk kembali.");
+                                    scanner.nextLine();
+                                    exit2 = true; // Langsung kembali jika histori kosong
+                                }
                             } while (!exit2);
                             break;
                         
-                        // 5. Hapus Customer
-                        case 5:
+                        // 3. Hapus Customer
+                        case 3:
                             System.out.print("Masukkan ID Customer yang ingin dihapus: ");
                             String deleteCust = scanner.nextLine();
                             manager.removeCustomer(deleteCust, customers);
                             break;
 
-                        // 6. Lihat Daftar Customer
-                        case 6:
+                        // 4. Lihat Daftar Customer
+                        case 4:
                             System.out.println("Daftar Customer:");
                             manager.listCustomers(customers);
                             break;
 
-                        // 7. Informasi Akun
-                        case 7:
+                        // 5. Informasi Akun
+                        case 5:
                             exit2 = false;
                             do {
                                 loggedInAdmin.displayInfo();
@@ -191,8 +246,13 @@ public class Main {
                                 System.out.println("1. Ganti Nama:");
                                 System.out.println("2. Ganti Password:");
                                 System.out.println("0. Kembali:");
-                                int input = Integer.parseInt(scanner.nextLine());
-                                
+                                System.out.print("Pilih: ");
+                                int input;
+                                do {
+                                    String tempInput = scanner.nextLine();
+                                    input = CafeManager.checkInput(tempInput);
+                                } while (choice2 < 0);
+
                                 switch (input) {
                                     case 1:
                                         System.out.print("Masukkan Nama Baru: ");
@@ -237,78 +297,61 @@ public class Main {
                     if (!loggedInCustomer.getOnline()) {
                         System.out.println("1. Sewa Komputer");
                     } else {
-                        System.out.println("1. Akhiri Sesi");
+                        System.out.println("1. Akhiri Sesi & Bayar");
                     }
                     System.out.println("2. Tampilkan Status Komputer");
-                    System.out.println("3. Lihat Riwayat Sewa");
+                    System.out.println("3. Lihat Riwayat Sewa Saya");
                     System.out.println("4. Informasi Akun");
                     System.out.println("0. Logout");
                     System.out.print("Pilih: ");
-                    int choice2 = Integer.parseInt(scanner.nextLine());
+                    int choice2;
+                    do {
+                        String tempChoice2 = scanner.nextLine();
+                        choice2 = CafeManager.checkInput(tempChoice2);
+                    } while (choice2 < 0 || choice2 > 4);
 
                     switch (choice2) {
                         // 1. Sewa atau akhiri sesi
-                        case 1:
-                            if (!loggedInCustomer.getOnline()) {
+                        case 1: // Sewa Komputer atau Akhiri Sesi & Bayar
+                            if (!loggedInCustomer.getOnline()) { // Jika customer tidak sedang online maka akan menjadi menu sewa komputer
                                 String type;
                                 do {
                                     System.out.print("Pilih tipe komputer (regular/vip): ");
                                     type = scanner.nextLine();
+                                    if (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular"))) {
+                                        System.out.println("Tipe tidak valid. Coba lagi.");
+                                    }
                                 } while (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular")));
 
                                 int duration = 0;
                                 boolean validInput = false;
                                 while (!validInput) {
-                                    try {
-                                        System.out.print("Masukkan durasi (jam): ");
-                                        duration = Integer.parseInt(scanner.nextLine());
+                                    System.out.print("Masukkan durasi (jam): ");
+                                    String durString = scanner.nextLine();
+                                    duration = CafeManager.checkInput(durString);
+                                    if (duration > 0) {
                                         validInput = true;
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("Input tidak valid. Masukkan angka.");
+                                    } else {
+                                        System.out.println("Durasi tidak valid. Masukkan angka positif.");
                                     }
                                 }
-
                                 manager.startSession(loggedInCustomer, type, duration);
-                            } else {
-                                Session toBePaySession = manager.endSession(loggedInCustomer);
-                                int amount = toBePaySession.getComputer().calculatePrice(toBePaySession.getDuration());
-                                System.out.printf("Total: Rp. %d\n", amount);
-
-                                System.out.println("Pilih metode pembayaran:");
-                                System.out.println("1. Cash");
-                                System.out.println("2. E-Wallet");
-                                System.out.print("Pilih: ");
-                                int payChoice;
-                                do {
-                                    String tempPayChoice = scanner.nextLine();
-                                    payChoice = CafeManager.checkInput(tempPayChoice);
-                                } while (choice2 < 0);
-
-                                Payment payment;
-                                do {
-                                    switch (payChoice) {
-                                    case 1:
-                                        payment = new CashPayment();
-                                        break;
-                                    case 2:
-                                        String wallet = null;
-                                        do {
-                                            System.out.println("Pilih e-wallet (QRIS/Gopay/OVO): ");
-                                            String input = scanner.nextLine();
-                                            if (input.equalsIgnoreCase("QRIS")||input.equalsIgnoreCase("Gopay")||input.equalsIgnoreCase("OVO")) {
-                                                wallet = input.toUpperCase();
-                                            } else {
-                                                System.out.println("e-wallet tidak valid, coba lagi.");
-                                            }
-                                        } while (wallet == null);
-                                        payment = new DigitalPayment(wallet);
-                                        break;
-                                    default:
-                                        System.out.println("Input tidak valid.");
-                                        return;
+                            } else { // Jika customer sedang online, maka menjadi menu untuk akhiri sesi dan bayar
+                                Session endedSession = manager.endSession(loggedInCustomer);
+                                if (endedSession != null) {
+                                    // Panggil method custPay dari CafeManager
+                                    boolean paymentSuccess = manager.custPay(endedSession, scanner);
+                                    if (paymentSuccess) {
+                                        // Pesan sukses sudah dicetak di dalam custPay
+                                    } else {
+                                        // Pesan error sudah dicetak di dalam custPay atau endSession
+                                        System.out.println("Pembayaran tidak dapat diselesaikan.");
+                                        // Pertimbangkan logika jika pembayaran gagal (misalnya, sesi tidak jadi diakhiri)
+                                        // Untuk saat ini, sesi sudah diakhiri oleh endSession()
                                     }
-                                } while (payment == null);
-                                payment.pay(amount);
+                                } else {
+                                    System.out.println("Tidak ada sesi aktif yang bisa diakhiri.");
+                                }
                             }
                             break;
 
@@ -331,7 +374,12 @@ public class Main {
                                 System.out.println("1. Ganti Nama:");
                                 System.out.println("2. Ganti Password:");
                                 System.out.println("0. Kembali:");
-                                int input = Integer.parseInt(scanner.nextLine());
+                                System.out.print("Pilih: ");
+                                int input;
+                                do {
+                                    String tempInput = scanner.nextLine();
+                                    input = CafeManager.checkInput(tempInput);
+                                } while (input < 0 || input > 2);
                                 
                                 switch (input) {
                                     case 1:
@@ -360,6 +408,7 @@ public class Main {
                             } while (!exit2);
                             break;
 
+                        // 0. Logout
                         case 0:
                             System.out.println("Log out...");
                             exit1 = true;
@@ -372,5 +421,6 @@ public class Main {
                 }
             }
         }
+        scanner.close();
     }
 }

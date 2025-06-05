@@ -1,4 +1,6 @@
-package Master;
+package Master.Computer;
+
+import Master.User.Customer;
 
 public class VipComputer extends Computer {
     private final int RATE_PER_HOUR = 20000;

@@ -1,4 +1,6 @@
-package Master;
+package Master.Computer;
+
+import Master.User.Customer;
 
 public class RegularComputer extends Computer {
     private final int RATE_PER_HOUR = 10000;

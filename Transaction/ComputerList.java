@@ -1,35 +1,65 @@
 package Transaction;
-import Master.*;
+import Master.Computer.*;
 import java.util.*;
 
 public class ComputerList {
     private static class Node {
         Computer data;
         Node next;
-        Node(Computer data) { this.data = data; }
+        Node(Computer data) {
+            this.data = data;
+        }
     }
 
     private Node head, tail, current;
     private int size = 0;
 
     // Tambah komputer di akhir list
-    public void add(Computer computer) {
-        if (contains(computer.getNumber())) {
-            System.out.printf("Komputer dengan nomor %d sudah ada.\n",computer.getNumber());
-            System.out.println("Computer dengan nomor " + computer.getNumber() + " sudah ada.");
-            return;
+    public boolean add(Computer computer) {
+        if (computer == null) { // Menambahkan validasi null untuk objek computer
+            return false;
         }
-        Node node = new Node(computer);
-        if (head == null) {
-            head = tail = node;
-            node.next = node;
-            current = head;
+        if (contains(computer.getNumber())) { // Cek duplikasi nomor komputer
+            return false;
+        }
+
+        Node newNode = new Node(computer);
+
+        if (head == null) { // Jika list masih kosong
+            head = tail = newNode;
+            newNode.next = newNode; // Menunjuk ke diri sendiri (circular)
+            current = head;         // Inisialisasi pointer 'current'
         } else {
-            tail.next = node;
-            node.next = head;
-            tail = node;
+            // Jika list tidak kosong, sisipkan node baru secara terurut
+            // Kasus 1: Nomor komputer baru lebih kecil dari nomor komputer di head (menjadi head baru)
+            if (newNode.data.getNumber() < head.data.getNumber()) {
+                newNode.next = head;
+                tail.next = newNode; // Tail menunjuk ke head baru
+                head = newNode;
+            }
+            // Kasus 2: Nomor komputer baru lebih besar atau sama dengan head
+            else {
+                Node currentSearch = head;
+                // Cari posisi yang tepat untuk menyisipkan node baru
+                // Loop selama currentSearch.next bukan head (belum kembali ke awal list) dan nomor komputer baru lebih besar dari nomor komputer berikutnya
+                while (currentSearch.next != head && newNode.data.getNumber() > currentSearch.next.data.getNumber()) {
+                    currentSearch = currentSearch.next;
+                }
+
+                // Sisipkan newNode setelah currentSearch
+                newNode.next = currentSearch.next;
+                currentSearch.next = newNode;
+
+                // Jika newNode disisipkan setelah tail lama (menjadi tail baru)
+                // Ini terjadi jika currentSearch adalah tail (sebelum disisipi),
+                // sehingga newNode.next akan menunjuk ke head.
+                if (newNode.next == head) {
+                    tail = newNode;
+                }
+            }
         }
         size++;
+        return true;
     }
 
     // Hapus komputer by ID, return true kalau berhasil
@@ -83,10 +113,14 @@ public class ComputerList {
     }
 
     private boolean contains(int number) {
-        if (head == null) return false;
+        if (head == null){
+            return false;
+        }
         Node curr = head;
         do {
-            if (curr.data.getNumber() == number) return true;
+            if (curr.data.getNumber() == number) {
+                return true;
+            }
             curr = curr.next;
         } while (curr != head);
         return false;

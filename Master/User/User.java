@@ -1,4 +1,4 @@
-package Master;
+package Master.User;
 
 public abstract class User {
     private String name;

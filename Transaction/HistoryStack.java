@@ -19,7 +19,6 @@ public class HistoryStack {
 
     public Session pop() {
         if (top == null) {
-            System.out.println("History kosong.");
             return null;
         }
         Session s = top.data;
@@ -37,7 +36,7 @@ public class HistoryStack {
     }
 
     public void printHistory() {
-        System.out.println("=== History Stack ===");
+        System.out.println("\nRiwayat Sesi");
         Node curr = top;
         while (curr != null) {
             curr.data.printSessionInfo();

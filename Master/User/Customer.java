@@ -1,4 +1,4 @@
-package Master;
+package Master.User;
 import Transaction.*;
 import java.util.*;
 
@@ -10,6 +10,7 @@ public class Customer extends User {
     public Customer(String name, String password, String idCustomer) {
         super(name, password);
         this.idCustomer = idCustomer;
+        custSessions = new ArrayList<>();
     }
 
     public String getIdCustomer() {
@@ -26,10 +27,14 @@ public class Customer extends User {
 
     public void displayCustSessions() {
         int index = 0;
-        for (Session session : custSessions) {
+        if (custSessions.isEmpty()) {
+            System.out.println("Anda belum mempunyai riwayat.");
+        } else {
+            for (Session session : custSessions) {
             System.out.printf("%d. Komputer %d dengan durasi %d\n", index, session.getComputer().getNumber(), session.getDuration());
             index++;
-        };
+            }
+        }
     }
 
     public void addSession(Session session) {

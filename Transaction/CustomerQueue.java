@@ -1,5 +1,5 @@
 package Transaction;
-import Master.*;
+import Master.User.*;
 
 public class CustomerQueue {
     private static class Node {

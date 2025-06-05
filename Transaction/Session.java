@@ -1,15 +1,18 @@
 package Transaction;
-import  Master.*;
+import Master.Computer.*;
+import Master.User.*;
 
 public class Session {
     private Customer customer;
     private Computer computer;
     private int duration;
+    private boolean isActive;
 
     public Session(Customer customer, Computer computer, int duration) {
         this.customer = customer;
         this.computer = computer;
         this.duration = duration;
+        this.isActive = true;
         computer.occupy(customer);
     }
     
@@ -37,9 +40,14 @@ public class Session {
         return duration;
     }
 
+    public boolean getIsActive(){
+        return this.isActive;
+    }
+
     public void end() {
         customer.setOnline(false);
         computer.release();
+        this.isActive = false;
         printSessionInfo();
     }
 
