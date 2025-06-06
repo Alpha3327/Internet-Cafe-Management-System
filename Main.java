@@ -8,6 +8,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         CafeManager manager = new CafeManager(5,2);
 
+        // Kumpulan admin
         ArrayList<Admin> admins = new ArrayList<>();
         admins.add(new Admin("Aaron Laurens Misael Wantania", "admin123", "00000133269"));
         admins.add(new Admin("Rafly Ahmad Julyana", "admin123", "00000127818"));
@@ -17,6 +18,7 @@ public class Main {
         admins.add(new Admin("Haris Alfarisi", "admin123", "00000128655"));
         admins.add(new Admin("admin", "a", "a"));
 
+        // Kumpulan customer
         ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "1", "1"));
 
@@ -28,19 +30,21 @@ public class Main {
             System.out.println("Ketik stop untuk memberhentikan program");
             String programConf = scanner.nextLine();
 
+            // jika user ketik "stop" maka program akan berhenti
             if (programConf.equalsIgnoreCase("stop")) {
                 System.out.println("Terima kasih sudah menggunakan program ini.");
                 exit = true;
                 break;
             }
             
+            // Sistem login
             while (loggedInUser == null) {
                 System.out.println("\nSilakan masuk untuk melanjutkan.");
                 System.out.print("Masukkan ID atau nama: ");
                 String inputIdOrPass = scanner.nextLine();
                 System.out.print("Masukkan Password: ");
                 String inputPassword = scanner.nextLine();
-
+                // memeriksa apakah input user ada di admin
                 for (Admin admin : admins) {
                     if ((admin.getIdAdmin().equalsIgnoreCase(inputIdOrPass) || admin.getName().equalsIgnoreCase(inputIdOrPass)) && admin.getPassword().equals(inputPassword)) {
                         System.out.printf("\nSelamat datang, %s\n", admin.getName());
@@ -48,7 +52,7 @@ public class Main {
                         break;
                     }
                 }
-
+                // memeriksa apakah input user ada di customer
                 for (Customer customer : customers) {
                     if ((customer.getIdCustomer().equalsIgnoreCase(inputIdOrPass) || customer.getName().equalsIgnoreCase(inputIdOrPass)) && customer.getPassword().equals(inputPassword)) {
                         System.out.printf("\nSelamat datang, %s\n", customer.getName());
@@ -56,7 +60,7 @@ public class Main {
                         break;
                     }
                 }
-
+                // jika tidak ada dikeduanya maka akan memunculkan pesan untuk membuat akun(customer) baru
                 if (loggedInUser == null) {
                     System.out.println("\nID atau Password salah. Coba lagi.\n");
                     String inputRegis;
@@ -92,23 +96,22 @@ public class Main {
                     } while (accountLoop);
                 }
             }
-
+            // Menu yang ditampilkan jika user adalah admin
             if (loggedInUser instanceof Admin loggedInAdmin) {
                 boolean exit1 = false;
                 while (!exit1) {
                     System.out.println("\nMenu Admin:");
                     System.out.println("1. Atur Komputer");
                     System.out.println("2. Lihat Riwayat Sewa");
-                    System.out.println("3. Hapus Customer");
-                    System.out.println("4. Lihat Daftar Customer");
-                    System.out.println("5. Informasi Akun");
+                    System.out.println("3. Lihat Daftar Customer");
+                    System.out.println("4. Informasi Akun");
                     System.out.println("0. Logout");
                     System.out.print("Pilih: ");
                     int choice2;
                     do {
                         String tempChoice2 = scanner.nextLine();
                         choice2 = CafeManager.checkInput(tempChoice2);
-                    } while (choice2 < 0);
+                    } while (choice2 < 0 || choice2 > 4);
 
                     boolean exit2;
                     switch (choice2) {
@@ -126,7 +129,7 @@ public class Main {
                             do {
                                 String tempInput = scanner.nextLine();
                                 input = CafeManager.checkInput(tempInput);
-                            } while (input < 0);
+                            } while (input < 0 || input > 2);
 
                             switch (input) {
                                 // 1. Tambah komputer
@@ -221,22 +224,47 @@ public class Main {
                                 }
                             } while (!exit2);
                             break;
-                        
-                        // 3. Hapus Customer
+                        // 3. Daftar Customer
                         case 3:
-                            System.out.print("Masukkan ID Customer yang ingin dihapus: ");
-                            String deleteCust = scanner.nextLine();
-                            manager.removeCustomer(deleteCust, customers);
-                            break;
+                            exit2 = false;
+                            do {
+                                boolean notEmpty = manager.listCustomers(customers);
+                                if (notEmpty) { // jika histori tidak kosong, maka akan menampilkan menu lagi
+                                    System.out.println("\nMenu:");
+                                    System.out.println("1. Hapus Customer");
+                                    System.out.println("0. Kembali");
+                                    System.out.print("Pilih: ");
+                                    int input;
+                                    do {
+                                        String tempInput = scanner.nextLine();
+                                        input = CafeManager.checkInput(tempInput);
+                                    } while (input < 0 || input > 1);
 
-                        // 4. Lihat Daftar Customer
+                                    switch (input) {
+                                        case 1:
+                                            System.out.print("Masukkan ID Customer yang ingin dihapus: ");
+                                            String deleteCust = scanner.nextLine();
+                                            manager.removeCustomer(deleteCust, customers);                                            break;
+                                            
+                                        case 0:
+                                            System.out.println("Kembali ke menu sebelumnya.");
+                                            exit2 = true;
+                                            break;
+                                            
+                                        default:
+                                            // Seharusnya tidak tercapai
+                                            System.out.println("Pilihan tidak valid.");
+                                            break;
+                                    }
+                                } else {
+                                    System.out.println("Tekan enter untuk kembali.");
+                                    scanner.nextLine();
+                                    exit2 = true; // Langsung kembali jika histori kosong
+                                }
+                            } while (!exit2);
+                            break;
+                        // 4. Informasi Akun
                         case 4:
-                            System.out.println("Daftar Customer:");
-                            manager.listCustomers(customers);
-                            break;
-
-                        // 5. Informasi Akun
-                        case 5:
                             exit2 = false;
                             do {
                                 loggedInAdmin.displayInfo();
@@ -277,7 +305,7 @@ public class Main {
                                 }
                             } while (!exit2);
                             break;
-                        // Keluar
+                        // 0. Logout
                         case 0:
                             System.out.println("Log out...");
                             exit1 = true;
@@ -288,10 +316,12 @@ public class Main {
                             break;
                     }
                 }
+            // Menu yang ditampilkan jika user adalah customer
             } else if (loggedInUser instanceof Customer loggedInCustomer) {
                 boolean exit1 = false;
                 while (!exit1) {
                     System.out.println("\nMenu Customer:");
+                    // Akan menunjukan menu sesuai status online customer
                     if (!loggedInCustomer.getOnline()) {
                         System.out.println("1. Sewa Komputer");
                     } else {
@@ -310,7 +340,7 @@ public class Main {
 
                     switch (choice2) {
                         // 1. Sewa atau akhiri sesi
-                        case 1: // Sewa Komputer atau Akhiri Sesi & Bayar
+                        case 1:
                             if (!loggedInCustomer.getOnline()) { // Jika customer tidak sedang online maka akan menjadi menu sewa komputer
                                 String type;
                                 do {
@@ -333,18 +363,16 @@ public class Main {
                                         System.out.println("Durasi tidak valid. Masukkan angka positif.");
                                     }
                                 }
-                                manager.startSession(loggedInCustomer, type, duration);
+                                manager.requestSession(loggedInCustomer, type, duration);
                             } else { // Jika customer sedang online, maka menjadi menu untuk akhiri sesi dan bayar
                                 Session endedSession = manager.endSession(loggedInCustomer);
                                 if (endedSession != null) {
                                     // Panggil method custPay dari CafeManager
                                     boolean paymentSuccess = manager.custPay(endedSession, scanner);
                                     if (paymentSuccess) {
-                                        // Pesan sukses sudah dicetak di dalam custPay
+                                        System.out.println("Terima kasih!");
                                     } else {
-                                        // Pesan error sudah dicetak di dalam custPay atau endSession
-                                        System.out.println("Pembayaran tidak dapat diselesaikan.");
-                                        // Pertimbangkan logika jika pembayaran gagal (misalnya, sesi tidak jadi diakhiri)
+                                        System.out.println("Pembayaran gagal.");
                                     }
                                 } else {
                                     System.out.println("Tidak ada sesi aktif yang bisa diakhiri.");
@@ -359,7 +387,7 @@ public class Main {
 
                         // 3. Lihat riwayat sesi
                         case 3:
-                            loggedInCustomer.displayCustSessions();
+                            loggedInCustomer.displayCustSessions(); // hanya menampilkan riwayat di akun yang digunakan untuk login
                             break;
 
                         // 4. Ganti password

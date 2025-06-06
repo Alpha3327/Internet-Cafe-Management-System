@@ -16,43 +16,35 @@ public class ComputerList {
 
     // Tambah komputer di akhir list
     public boolean add(Computer computer) {
-        if (computer == null) { // Menambahkan validasi null untuk objek computer
-            return false;
-        }
-        if (contains(computer.getNumber())) { // Cek duplikasi nomor komputer
+        if (computer == null || contains(computer.getNumber())) { // akan mengembalikan false(gagal) jika computer null atau sudah ada(duplikat)
             return false;
         }
 
         Node newNode = new Node(computer);
-
         if (head == null) { // Jika list masih kosong
             head = tail = newNode;
             newNode.next = newNode; // Menunjuk ke diri sendiri (circular)
             current = head;         // Inisialisasi pointer 'current'
         } else {
             // Jika list tidak kosong, sisipkan node baru secara terurut
-            // Kasus 1: Nomor komputer baru lebih kecil dari nomor komputer di head (menjadi head baru)
+            // Kemungkinan 1: ketika komputer baru lebih kecil dari nomor komputer di head (menjadi head baru)
             if (newNode.data.getNumber() < head.data.getNumber()) {
                 newNode.next = head;
                 tail.next = newNode; // Tail menunjuk ke head baru
                 head = newNode;
             }
-            // Kasus 2: Nomor komputer baru lebih besar atau sama dengan head
+            // Kemungkinan 2: ketika komputer baru lebih besar atau sama dengan head
             else {
                 Node currentSearch = head;
                 // Cari posisi yang tepat untuk menyisipkan node baru
-                // Loop selama currentSearch.next bukan head (belum kembali ke awal list) dan nomor komputer baru lebih besar dari nomor komputer berikutnya
+                // Loop selama belum kembali ke awal list dan nomor komputer baru lebih besar dari komputer berikutnya
                 while (currentSearch.next != head && newNode.data.getNumber() > currentSearch.next.data.getNumber()) {
                     currentSearch = currentSearch.next;
                 }
-
                 // Sisipkan newNode setelah currentSearch
                 newNode.next = currentSearch.next;
                 currentSearch.next = newNode;
-
                 // Jika newNode disisipkan setelah tail lama (menjadi tail baru)
-                // Ini terjadi jika currentSearch adalah tail (sebelum disisipi),
-                // sehingga newNode.next akan menunjuk ke head.
                 if (newNode.next == head) {
                     tail = newNode;
                 }
@@ -126,6 +118,7 @@ public class ComputerList {
         return false;
     }
 
+    // agar bisa menggunakan method size() seperti di arraylist
     public int size() {
         return size;
     }
