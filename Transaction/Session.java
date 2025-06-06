@@ -12,7 +12,6 @@ public class Session {
         this.customer = customer;
         this.computer = computer;
         this.duration = duration;
-        this.isActive = true;
         computer.occupy(customer);
     }
     

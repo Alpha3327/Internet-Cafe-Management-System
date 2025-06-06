@@ -1,4 +1,5 @@
 package Transaction;
+
 import Master.Computer.*;
 import Master.Payment.CashPayment;
 import Master.Payment.DigitalPayment;
@@ -11,8 +12,7 @@ public class CafeManager {
     CustomerQueue waitingQueue;
     ArrayList<Session> sessions;
     HistoryStack history;
-    private Session currentSession;
-    
+
     public CafeManager(int numRegComputers, int numVipComputers) {
         sessions = new ArrayList<>();
         waitingQueue = new CustomerQueue();
@@ -31,8 +31,7 @@ public class CafeManager {
 
     public static int checkInput(String input) {
         try {
-            int number = Integer.parseInt(input);
-            return number;
+            return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             System.out.println("Input tidak valid. Masukkan angka.");
             return -1;
@@ -40,18 +39,15 @@ public class CafeManager {
     }
 
     public void addComputer(Computer computer) {
-        boolean status = computers.add(computer);
-        if (status) {
+        if (computers.add(computer)) {
             System.out.printf("%s #%d telah ditambahkan.\n", computer.getType(), computer.getNumber());
         } else {
             System.out.printf("Komputer dengan nomor %d sudah ada.\n", computer.getNumber());
         }
     }
 
-
     public void removeComputer(int computerNumber) {
-        boolean removed = computers.remove(computerNumber);
-        if (removed) {
+        if (computers.remove(computerNumber)) {
             System.out.printf("Komputer nomor #%d dihapus dari list.\n", computerNumber);
         } else {
             System.out.printf("Komputer dengan nomor #%d tidak dapat ditemukan.\n", computerNumber);
@@ -65,79 +61,36 @@ public class CafeManager {
             System.out.printf("%s #%d: %s%n", c.getType(), c.getNumber(), status);
         }
     }
-
-    public boolean historyList() {
-        if (sessions.isEmpty()) {
-            System.out.println("Riwayat kosong.");
-            return false;
-        } else {
-            history.printHistory();
-            return true;
-        }
-    }
-
-    public void removeCustomer(String idCustomer, ArrayList<Customer> customers) {
-        // Cari customer berdasarkan ID
-        Customer toRemove = null;
-        for (Customer customer : customers) {
-            if (idCustomer.equals(customer.getIdCustomer())) {
-                toRemove = customer;
-                break;
-            }
-        }
-        // Jika ditemukan, hapus dan tampilkan pesan
-        if (toRemove != null) {
-            customers.remove(toRemove);
-            System.out.printf("Customer %s dengan ID: %s telah dihapus dari sistem.\n", toRemove.getName(), idCustomer);
-        } else {
-            System.out.printf("Customer dengan ID %s tidak ditemukan di dalam sistem.\n", idCustomer);
-        }
-    }
     
-    public void listCustomers(ArrayList<Customer> customers) {
-        if (customers.isEmpty()) {
-            System.out.println("Tidak ada customer terdaftar.");
-        } else {
-            System.out.println("Daftar Customer");
-            for (Customer c : customers) {
-                System.out.println("- " + c.getName() + " (ID: " + c.getIdCustomer() + ")");
-            }
-        }
-    }
-
-    private Computer findFreeByType(String type) {
-    for (Computer c : computers.toList()) {
-        if (c.isAvailable() && c.getType().equalsIgnoreCase(type)) {
-            return c;
-        }
-    }
-    return null;
-    }
-
-    public Session startSession(Customer customer, String type, int duration) {
+    // Metode ini sekarang menjadi dispatcher: memulai sesi atau menambahkan ke antrian.
+    public void startSession(Customer customer, String type, int duration) {
         if (customer.getOnline()) {
             System.out.println(customer.getName() + " sudah punya sesi aktif.");
-            return null;
+            return;
         }
-        Computer free = findFreeByType(type);
-        if (free == null) {
-            System.out.println("Tidak ada komputer " + type + " yang tersedia. Masuk antrian.");
-            waitingQueue.enqueue(customer);
-            return null;
+
+        Computer freeComputer = findFreeByType(type);
+        if (freeComputer == null) {
+            System.out.println("Tidak ada komputer " + type + " yang tersedia. Anda ditambahkan ke dalam antrian.");
+            waitingQueue.enqueue(new CustomerQueue.QueueRequest(customer, type, duration));
+        } else {
+            // Komputer tersedia, langsung mulai sesi.
+            startSession(customer, freeComputer, duration);
         }
-        
+    }
+
+    // Metode private untuk memulai sesi pada komputer yang *spesifik*.
+    private void startSession(Customer customer, Computer computer, int duration) {
         customer.setOnline(true);
-        free.occupy(customer);
+        computer.occupy(customer);
 
-        currentSession = new Session(customer, free, duration);
-        sessions.add(currentSession);
+        Session newSession = new Session(customer, computer, duration);
+        sessions.add(newSession);
 
-        System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.\n", customer.getName(), free.getType(), free.getNumber(), duration);
-        return currentSession;
+        System.out.printf("Sesi dimulai: %s menggunakan %s #%d selama %d jam.\n", customer.getName(), computer.getType(), computer.getNumber(), duration);
     }
 
     public Session endSession(Customer customer) {
-        // Find the active session for this customer
         Session sessionToEnd = null;
         for (Session session : sessions) {
             if (session.getCustomer().equals(customer) && session.getIsActive()) {
@@ -149,26 +102,95 @@ public class CafeManager {
         if (sessionToEnd == null) {
             System.out.println("Tidak ada sesi aktif untuk " + customer.getName());
             return null;
+        }
+
+        Computer freedComputer = sessionToEnd.getComputer();
+
+        customer.addSession(sessionToEnd);
+        sessionToEnd.end(); // Melepaskan komputer dan mengubah status customer.
+        history.push(sessionToEnd);
+        sessions.remove(sessionToEnd); // Hapus dari daftar sesi aktif.
+        
+        System.out.printf("Sesi untuk %s telah diakhiri.\n", customer.getName());
+
+        // LOGIKA BARU: Periksa antrian untuk komputer yang baru saja bebas.
+        processQueue(freedComputer);
+
+        return sessionToEnd;
+    }
+    
+    private void processQueue(Computer freedComputer) {
+        System.out.println("Mengecek antrian untuk komputer " + freedComputer.getType() + " yang baru tersedia...");
+        
+        // Cari pelanggan berikutnya di antrian yang menunggu tipe komputer ini.
+        CustomerQueue.QueueRequest nextInLine = waitingQueue.dequeueFor(freedComputer.getType());
+
+        if (nextInLine != null) {
+            System.out.println("Pelanggan ditemukan di antrian: " + nextInLine.getCustomer().getName());
+            // Pelanggan ditemukan, mulai sesi baru untuk mereka.
+            startSession(nextInLine.getCustomer(), freedComputer, nextInLine.getDuration());
         } else {
-            customer.addSession(sessionToEnd); // Add to customer's personal history
-            sessionToEnd.end(); // This should mark session inactive, release computer, set customer offline
-            history.push(sessionToEnd); // Add to global history
-            sessions.remove(sessionToEnd); // Remove from active sessions list
-            if (currentSession != null && currentSession.equals(sessionToEnd)) { // Also clear currentSession if it was this one
-                currentSession = null;
-            }
-            System.out.printf("Sesi untuk %s telah diakhiri.\n", customer.getName());
-            return sessionToEnd;
+            System.out.println("Tidak ada pelanggan di antrian yang menunggu komputer tipe " + freedComputer.getType() + ".");
         }
     }
 
-    public boolean custPay(Session sessionToPay, Scanner scanner) {
-        if (sessionToPay == null) {
-            System.out.println("Error: Tidak ada sesi yang valid untuk pembayaran.");
+    private Computer findFreeByType(String type) {
+        for (Computer c : computers.toList()) {
+            if (c.isAvailable() && c.getType().equalsIgnoreCase(type)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public boolean historyList() {
+        if (history.isEmpty()) {
+            System.out.println("Riwayat kosong.");
             return false;
         }
-        if (sessionToPay.getComputer() == null) {
-            System.out.println("Sesi tidak memiliki komputer.");
+        history.printHistory();
+        return true;
+    }
+    
+    public void removeLastHistory() {
+        if (history.isEmpty()) {
+            System.out.println("Riwayat sudah kosong, tidak ada yang bisa dihapus.");
+            return;
+        }
+        System.out.println("Histori berikut telah dihapus:");
+        history.pop().printSessionInfo();
+    }
+
+    public void removeCustomer(String idCustomer, ArrayList<Customer> customers) {
+        Customer toRemove = null;
+        for (Customer customer : customers) {
+            if (idCustomer.equals(customer.getIdCustomer())) {
+                toRemove = customer;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            customers.remove(toRemove);
+            System.out.printf("Customer %s dengan ID: %s telah dihapus dari sistem.\n", toRemove.getName(), idCustomer);
+        } else {
+            System.out.printf("Customer dengan ID %s tidak ditemukan di dalam sistem.\n", idCustomer);
+        }
+    }
+
+    public void listCustomers(ArrayList<Customer> customers) {
+        if (customers.isEmpty()) {
+            System.out.println("Tidak ada customer terdaftar.");
+        } else {
+            System.out.println("Daftar Customer");
+            for (Customer c : customers) {
+                System.out.println("- " + c.getName() + " (ID: " + c.getIdCustomer() + ")");
+            }
+        }
+    }
+    
+    public boolean custPay(Session sessionToPay, Scanner scanner) {
+        if (sessionToPay == null || sessionToPay.getComputer() == null) {
+            System.out.println("Sesi tidak valid untuk pembayaran.");
             return false;
         }
 
@@ -176,17 +198,10 @@ public class CafeManager {
         System.out.printf("Total Tagihan: Rp. %d\n", amount);
 
         Payment payment = null;
-        // Loop selama payment yang dipilih tidak valid
         while (payment == null) {
-            System.out.println("\nPilih metode pembayaran:");
-            System.out.println("1. Cash");
-            System.out.println("2. E-Wallet");
+            System.out.println("\nPilih metode pembayaran:\n1. Cash\n2. E-Wallet");
             System.out.print("Pilih: ");
-            int payChoice;
-            do {
-                String tempPayChoice = scanner.nextLine();
-                payChoice = checkInput(tempPayChoice);
-            } while (payChoice < 1 || payChoice > 2);
+            int payChoice = checkInput(scanner.nextLine());
 
             switch (payChoice) {
                 case 1:
@@ -195,7 +210,7 @@ public class CafeManager {
                 case 2:
                     String wallet = null;
                     do {
-                        System.out.println("Pilih e-wallet (QRIS/Gopay/OVO): ");
+                        System.out.print("Pilih e-wallet (QRIS/Gopay/OVO): ");
                         String input = scanner.nextLine();
                         if (input.equalsIgnoreCase("QRIS") || input.equalsIgnoreCase("Gopay") || input.equalsIgnoreCase("OVO")) {
                             wallet = input.toUpperCase();
@@ -206,7 +221,7 @@ public class CafeManager {
                     payment = new DigitalPayment(wallet);
                     break;
                 default:
-                    System.out.println("Input invalid. Coba lagi.");
+                    System.out.println("Pilihan tidak valid. Coba lagi.");
                     break;
             }
         }
@@ -214,14 +229,5 @@ public class CafeManager {
         payment.pay(amount);
         System.out.println("Pembayaran berhasil diproses.");
         return true;
-    }
-
-    public void removeLastHistory() {
-        if (history.isEmpty()) {
-            System.out.println("Riwayat sudah kosong, tidak ada yang bisa dihapus.");
-            return;
-        }
-        System.out.println("Histori berikut telah dihapus:");
-        history.pop().printSessionInfo();
     }
 }

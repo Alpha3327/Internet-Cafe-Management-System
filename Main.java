@@ -1,5 +1,4 @@
 import Master.Computer.*;
-import Master.Payment.*;
 import Master.User.*;
 import Transaction.*;
 import java.util.*;
@@ -20,7 +19,6 @@ public class Main {
 
         ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "1", "1"));
-        customers.add(new Customer("Haris", "12345", "2"));
 
         boolean exit = false;
         while (!exit) {
@@ -347,7 +345,6 @@ public class Main {
                                         // Pesan error sudah dicetak di dalam custPay atau endSession
                                         System.out.println("Pembayaran tidak dapat diselesaikan.");
                                         // Pertimbangkan logika jika pembayaran gagal (misalnya, sesi tidak jadi diakhiri)
-                                        // Untuk saat ini, sesi sudah diakhiri oleh endSession()
                                     }
                                 } else {
                                     System.out.println("Tidak ada sesi aktif yang bisa diakhiri.");
