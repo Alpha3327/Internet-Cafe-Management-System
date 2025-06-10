@@ -2,9 +2,8 @@ package Transaction;
 
 import Master.User.Customer;
 
-public class CustomerQueue {
-
-    public static class QueueRequest {
+public class CustomerQueue { // Queue single linkedlist untuk menyimpan antrian customer jika komputer penuh
+    public static class QueueRequest { // class yang digunakan untuk menyimpan request customer yang ada di dalam antrian
         private final Customer customer;
         private final String requestedType;
         private final int duration;
@@ -37,7 +36,7 @@ public class CustomerQueue {
     private Node head, tail;
     private int size = 0;
 
-    public void enqueue(QueueRequest request) {
+    public void enqueue(QueueRequest request) { // untuk menambahkan data baru(enqueue)
         Node newNode = new Node(request);
         if (tail != null) {
             tail.next = newNode;
@@ -50,7 +49,7 @@ public class CustomerQueue {
         System.out.println("Customer " + request.getCustomer().getName() + " masuk antrian untuk komputer " + request.getRequestedType() + ".");
     }
 
-    public QueueRequest dequeueFor(String availableComputerType) {
+    public QueueRequest dequeueFor(String availableComputerType) { // method yang dijalankan setiap satu sesi berakhir untuk memasukkan antrian ke dalam kommputer yang kosong
         if (isEmpty()) {
             return null;
         }

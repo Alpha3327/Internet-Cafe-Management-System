@@ -1,6 +1,6 @@
 package Master.User;
 
-public class Admin extends User {
+public class Admin extends User { // child class dari user
     private final String idAdmin;
 
     public Admin(String name, String password, String adminId) {
@@ -13,7 +13,7 @@ public class Admin extends User {
     }
 
     @Override
-    public void displayInfo() {
+    public void displayInfo() { // overide method abstrak dari user
         System.out.println("Nama: " + getName());
         System.out.println("ID Customer: " + idAdmin);
     }

@@ -98,7 +98,7 @@ public class Main {
                 }
             }
             // Menu yang ditampilkan jika user adalah admin
-            if (loggedInUser instanceof Admin loggedInAdmin) {
+            if (loggedInUser instanceof Admin loggedInAdmin) { // maka loggedinuser sebelumnya akan menjadi loggedinadmin
                 boolean exit1 = false;
                 while (!exit1) {
                     // Menu pilihan yang bisa dilakukan sebagai admin
@@ -139,7 +139,7 @@ public class Main {
                                 case 1:
                                     String type;
                                     Computer computer = null;
-                                    do {
+                                    do { // input tipe dan nomor komputer
                                         System.out.print("Masukkan Tipe Komputer (regular/vip): ");
                                         type = scanner.nextLine();
                                         System.out.print("Masukkan Nomor Komputer: ");
@@ -149,7 +149,7 @@ public class Main {
                                             number = CafeManager.checkInput(tempNumber);
                                         } while (number < 0);
 
-                                        switch (type.toLowerCase()) {
+                                        switch (type.toLowerCase()) { // memeriksa tipe komputer dan menggunakan class sesuai tipenya
                                             case "regular":
                                                 computer = new RegularComputer(number);
                                                 break;
@@ -177,6 +177,7 @@ public class Main {
                                     manager.removeComputer(deleteComputer);
                                     break;
 
+                                // 0. kembali
                                 case 0:
                                     System.out.println("Kembali ke menu sebelumnya.");
                                     exit2 = true;
@@ -192,11 +193,11 @@ public class Main {
                         // 2. Lihat Riwayat Sewa
                         case 2:
                             exit2 = false;
-                            do {
+                            do { // menu setelah menampilkan riwayat
                                 boolean notEmpty = manager.historyList();
                                 if (notEmpty) { // jika histori tidak kosong, maka akan menampilkan menu lagi
                                     System.out.println("\nMenu:");
-                                    System.out.println("1. Hapus Sesi terakhir");
+                                    System.out.println("1. Hapus Sesi terakhir"); // admin dapat menghapus sesi terakhir yang masuk (pop stack)
                                     System.out.println("0. Kembali");
                                     System.out.print("Pilih: ");
                                     int input;
@@ -216,21 +217,20 @@ public class Main {
                                             break;
                                             
                                         default:
-                                            // Seharusnya tidak tercapai
                                             System.out.println("Pilihan tidak valid.");
                                             break;
                                     }
                                 } else {
                                     System.out.println("Tekan enter untuk kembali.");
                                     scanner.nextLine();
-                                    exit2 = true; // Langsung kembali jika histori kosong
+                                    exit2 = true; // Langsung keluar dari loop jika histori kosong
                                 }
                             } while (!exit2);
                             break;
                         // 3. Daftar Customer
                         case 3:
                             exit2 = false;
-                            do {
+                            do { // menu yang akan ditampilkan setelah menampilkan list customer
                                 boolean notEmpty = manager.listCustomers(customers);
                                 if (notEmpty) { // jika histori tidak kosong, maka akan menampilkan menu lagi
                                     System.out.println("\nMenu:");
@@ -244,12 +244,12 @@ public class Main {
                                     } while (input < 0 || input > 1);
 
                                     switch (input) {
-                                        case 1:
+                                        case 1: // 1. hapus customer
                                             System.out.print("Masukkan ID Customer yang ingin dihapus: ");
                                             String deleteCust = scanner.nextLine();
                                             manager.removeCustomer(deleteCust, customers);                                            break;
                                             
-                                        case 0:
+                                        case 0: // 0. kembali
                                             System.out.println("Kembali ke menu sebelumnya.");
                                             exit2 = true;
                                             break;
@@ -270,6 +270,7 @@ public class Main {
                         case 4:
                             exit2 = false;
                             do {
+                                // menu setelah menampilkan informasi akun
                                 loggedInAdmin.displayInfo();
                                 System.out.println("\nMenu:");
                                 System.out.println("1. Ganti Nama:");
@@ -283,21 +284,21 @@ public class Main {
                                 } while (choice2 < 0);
 
                                 switch (input) {
-                                    case 1:
+                                    case 1: // 1. ganti nama
                                         System.out.print("Masukkan Nama Baru: ");
                                         String newName = scanner.nextLine();
                                         loggedInAdmin.setName(newName);
                                         System.out.println("Nama berhasil diubah.");
                                         break;
 
-                                    case 2:
+                                    case 2: // 2. ganti password
                                         System.out.print("Masukkan Password Baru: ");
                                         String newPass = scanner.nextLine();
                                         loggedInAdmin.setPassword(newPass);
                                         System.out.println("Password berhasil diubah.");
                                         break;
 
-                                    case 0:
+                                    case 0: // 0. kembali
                                         System.out.println("Kembali ke menu sebelumnya.");
                                         exit2 = true;
                                         break;
@@ -354,6 +355,7 @@ public class Main {
                                     }
                                 } while (!(type.equalsIgnoreCase("vip") || type.equalsIgnoreCase("regular")));
 
+                                // meminta durasi penyewaan ke pengguna
                                 int duration = 0;
                                 boolean validInput = false;
                                 while (!validInput) {
@@ -397,6 +399,7 @@ public class Main {
                         case 4:
                             boolean exit2 = false;
                             do {
+                                 // menu setelah menampilkan informasi akun
                                 loggedInCustomer.displayInfo();
                                 System.out.println("\nMenu:");
                                 System.out.println("1. Ganti Nama:");
@@ -410,21 +413,21 @@ public class Main {
                                 } while (input < 0 || input > 2);
                                 
                                 switch (input) {
-                                    case 1:
+                                    case 1: // 1. ganti nama
                                         System.out.print("Masukkan Nama Baru: ");
                                         String newName = scanner.nextLine();
                                         loggedInCustomer.setName(newName);
                                         System.out.println("Nama berhasil diubah.");
                                         break;
 
-                                    case 2:
+                                    case 2: // 2. ganti password
                                         System.out.print("Masukkan Password Baru: ");
                                         String newPass = scanner.nextLine();
                                         loggedInCustomer.setPassword(newPass);
                                         System.out.println("Password berhasil diubah.");
                                         break;
 
-                                    case 0:
+                                    case 0: // 0. kembali
                                         System.out.println("Kembali ke menu sebelumnya.");
                                         exit2 = true;
                                         break;

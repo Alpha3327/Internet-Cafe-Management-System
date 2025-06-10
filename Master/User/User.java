@@ -1,6 +1,6 @@
 package Master.User;
 
-public abstract class User {
+public abstract class User { // superclass user yang menerapkan abstrak
     private String name;
     private String password;
 
@@ -25,5 +25,5 @@ public abstract class User {
         this.password = password;
     }
 
-    public abstract void displayInfo();
+    public abstract void displayInfo(); // metode yang akan diambil oleh customer dan admin dan disesuaikan masing-masing untuk menampilkan info
 }

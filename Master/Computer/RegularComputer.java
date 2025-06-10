@@ -25,13 +25,13 @@ public class RegularComputer extends Computer {
     }
 
     @Override
-    public void release() {
+    public void release() { // method yang dijalankan ketika customer selesai menggunakan komputer
         System.out.printf("Komputer regular #%d telah selesai digunakan.\n", getNumber());
         setCurrentUser(null);
     }
 
     @Override
-    public int calculatePrice(int duration) {
+    public int calculatePrice(int duration) { // method untuk menghitung harga pembayaran
         return duration * RATE_PER_HOUR;
     }
 }

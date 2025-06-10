@@ -2,8 +2,8 @@ package Master.Computer;
 
 import Master.User.Customer;
 
-public class VipComputer extends Computer {
-    private final int RATE_PER_HOUR = 20000;
+public class VipComputer extends Computer { // childclass dari computer
+    private final int RATE_PER_HOUR = 20000; // harga perjam komputer sesuai tipe
     private final String type = "VIP";
 
     public VipComputer(int number) {

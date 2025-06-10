@@ -2,7 +2,7 @@ package Master.Computer;
 
 import Master.User.Customer;
 
-public abstract class Computer {
+public abstract class Computer { // supeerclass computer yang menerapkan abstrak
     private int number;
     private Customer currentUser;
 
@@ -30,12 +30,13 @@ public abstract class Computer {
     public boolean isAvailable() {
         return currentUser == null;
     }
+    // method method yang akan dioverride oleh childclass
 
     public abstract String getType();
 
-    public abstract void occupy(Customer customer);
+    public abstract void occupy(Customer customer); // ketika customer mulai menggunakan komputer
 
-    public abstract void release();
+    public abstract void release(); // ketika customer selesai menggunakan komputer
 
-    public abstract int calculatePrice(int duration);
+    public abstract int calculatePrice(int duration); // method untuk menghitung
 }

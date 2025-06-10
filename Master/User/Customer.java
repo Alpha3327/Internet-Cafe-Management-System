@@ -2,10 +2,10 @@ package Master.User;
 import Transaction.*;
 import java.util.*;
 
-public class Customer extends User {
+public class Customer extends User { // child class dari user
     private final String idCustomer;
     private boolean online;
-    private ArrayList<Session> custSessions;
+    private ArrayList<Session> custSessions; // untuk menyimpan riwayat dari akun customer
 
     public Customer(String name, String password, String idCustomer) {
         super(name, password);
@@ -25,7 +25,7 @@ public class Customer extends User {
     this.online = online;
     }
 
-    public void displayCustSessions() {
+    public void displayCustSessions() { // untuk menampilkan riwayat akun customer
         int index = 0;
         if (custSessions.isEmpty()) {
             System.out.println("Anda belum mempunyai riwayat.");
@@ -37,12 +37,12 @@ public class Customer extends User {
         }
     }
 
-    public void addSession(Session session) {
+    public void addSession(Session session) { // menambahkan sesi ke riwayat akun
         this.custSessions.add(session);
     }
 
     @Override
-    public void displayInfo() {
+    public void displayInfo() { // overide method abstrak dari user
         System.out.println("Nama: " + getName());
         System.out.println("ID Customer: " + idCustomer);
     }

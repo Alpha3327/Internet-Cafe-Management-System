@@ -1,6 +1,6 @@
 package Master.Payment;
 
-public class DigitalPayment implements Payment {
+public class DigitalPayment implements Payment { // childclass dari payment
     private String walletName;
 
     public DigitalPayment(String walletName) {
@@ -12,7 +12,7 @@ public class DigitalPayment implements Payment {
     }
 
     @Override
-    public void pay(int amount) {
+    public void pay(int amount) { // overide dari class payment
         System.out.printf("Pembayaran dengan %s sebesar Rp.%d diterima!\n", walletName, amount);
     }
 }

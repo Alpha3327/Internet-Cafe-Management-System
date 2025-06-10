@@ -2,11 +2,11 @@ package Transaction;
 import Master.Computer.*;
 import Master.User.*;
 
-public class Session {
+public class Session { // untuk menyimpan sesi customer
     private Customer customer;
     private Computer computer;
     private int duration;
-    private boolean isActive;
+    private boolean isActive; // untuk menandakan apakah sesi masih berlanjut atau sudah selesai
 
     public Session(Customer customer, Computer computer, int duration) {
         this.customer = customer;
@@ -44,14 +44,14 @@ public class Session {
         return this.isActive;
     }
 
-    public void end() {
+    public void end() { // method untuk menyelesaikan sesi
         customer.setOnline(false);
         computer.release();
         this.isActive = false;
         printSessionInfo();
     }
 
-    public void printSessionInfo() {
+    public void printSessionInfo() { // method untuk menampilkan informasi sesi saat selesai
         System.out.printf("%s menggunakan kommputer nomor %d selama %d jam.\n", customer.getName(), computer.getNumber(), duration);
     }
 }
