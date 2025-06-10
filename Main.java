@@ -22,6 +22,7 @@ public class Main {
         ArrayList<Customer> customers = new ArrayList<>();
         customers.add(new Customer("abc", "1", "1"));
 
+        // Masuk ke dalam program selama exit bernilai false
         boolean exit = false;
         while (!exit) {
             User loggedInUser = null;
@@ -30,7 +31,7 @@ public class Main {
             System.out.println("Ketik stop untuk memberhentikan program");
             String programConf = scanner.nextLine();
 
-            // jika user ketik "stop" maka program akan berhenti
+            // jika user ketik "stop" maka exit akan bernilai true dan program akan berhenti 
             if (programConf.equalsIgnoreCase("stop")) {
                 System.out.println("Terima kasih sudah menggunakan program ini.");
                 exit = true;
@@ -100,6 +101,7 @@ public class Main {
             if (loggedInUser instanceof Admin loggedInAdmin) {
                 boolean exit1 = false;
                 while (!exit1) {
+                    // Menu pilihan yang bisa dilakukan sebagai admin
                     System.out.println("\nMenu Admin:");
                     System.out.println("1. Atur Komputer");
                     System.out.println("2. Lihat Riwayat Sewa");
@@ -108,10 +110,10 @@ public class Main {
                     System.out.println("0. Logout");
                     System.out.print("Pilih: ");
                     int choice2;
-                    do {
+                    do { // pengecekan input agar tidak terjadi error ketika user memasukan huruf ketimbang angka
                         String tempChoice2 = scanner.nextLine();
-                        choice2 = CafeManager.checkInput(tempChoice2);
-                    } while (choice2 < 0 || choice2 > 4);
+                        choice2 = CafeManager.checkInput(tempChoice2); // jika input invalid akan mengembalikan nilai negatif
+                    } while (choice2 < 0 || choice2 > 4); // juga ada validasi opsi karena opsi tidak lebih dari 4
 
                     boolean exit2;
                     switch (choice2) {
@@ -119,6 +121,7 @@ public class Main {
                         case 1:
                         exit2 = false;
                         do {
+                            // Setelah menampilkan list status komputer, admin bisa melakukan tambah komputer, atau hapus komputer
                             manager.displayComputerStatus();
                             System.out.println("\nMenu:");
                             System.out.println("1. Tambah Komputer");
@@ -126,10 +129,10 @@ public class Main {
                             System.out.println("0. Kembali");
                             System.out.print("Pilih: ");
                             int input;
-                            do {
+                            do { // pengecekan input agar tidak terjadi error ketika user memasukan huruf ketimbang angka
                                 String tempInput = scanner.nextLine();
-                                input = CafeManager.checkInput(tempInput);
-                            } while (input < 0 || input > 2);
+                                input = CafeManager.checkInput(tempInput); // jika input invalid akan mengembalikan nilai negatif
+                            } while (input < 0 || input > 2); // juga ada validasi opsi karena opsi tidak lebih dari 4
 
                             switch (input) {
                                 // 1. Tambah komputer
